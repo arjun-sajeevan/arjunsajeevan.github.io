@@ -1,4 +1,5 @@
 baseURL = 'https://arjunsajeevan.com/'
+publishDir = 'docs'
 languageCode = 'en-us'
 title = 'Arjun Sajeevan'
 theme = 'PaperMod'
