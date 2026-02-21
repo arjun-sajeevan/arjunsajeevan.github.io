@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Posts | Arjun Sajeevan</title>
-<meta name="keywords" content="">
-<meta name="description" content="Posts - Arjun Sajeevan">
+<title>SQL Server Performance: Accelerating Inserts with TABLOCK | Arjun Sajeevan</title>
+<meta name="keywords" content="SQL Server, Performance Tuning, ETL, Data Engineering">
+<meta name="description" content="How to use TABLOCK to enable minimal logging and speed up bulk data loads in SQL Server.">
 <meta name="author" content="Arjun Sajeevan">
-<link rel="canonical" href="https://arjunsajeevan.com/posts/">
+<link rel="canonical" href="https://arjunsajeevan.com/posts/sql-tablock-performance/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://arjunsajeevan.com/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://arjunsajeevan.com/favicon-16x16.png">
@@ -18,8 +18,7 @@
 <link rel="mask-icon" href="https://arjunsajeevan.com/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="https://arjunsajeevan.com/posts/index.xml" title="rss">
-<link rel="alternate" hreflang="en" href="https://arjunsajeevan.com/posts/">
+<link rel="alternate" hreflang="en" href="https://arjunsajeevan.com/posts/sql-tablock-performance/">
 <noscript>
     <style>
         #theme-toggle,
@@ -71,15 +70,22 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><meta property="og:url" content="https://arjunsajeevan.com/posts/">
+</script><meta property="og:url" content="https://arjunsajeevan.com/posts/sql-tablock-performance/">
   <meta property="og:site_name" content="Arjun Sajeevan">
-  <meta property="og:title" content="Posts">
-  <meta property="og:description" content="Data Engineer @ Dell Technologies | ETL, SQL, PySpark">
+  <meta property="og:title" content="SQL Server Performance: Accelerating Inserts with TABLOCK">
+  <meta property="og:description" content="How to use TABLOCK to enable minimal logging and speed up bulk data loads in SQL Server.">
   <meta property="og:locale" content="en-us">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-21T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-21T00:00:00+00:00">
+    <meta property="article:tag" content="SQL Server">
+    <meta property="article:tag" content="Performance Tuning">
+    <meta property="article:tag" content="ETL">
+    <meta property="article:tag" content="Data Engineering">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Posts">
-<meta name="twitter:description" content="Data Engineer @ Dell Technologies | ETL, SQL, PySpark">
+<meta name="twitter:title" content="SQL Server Performance: Accelerating Inserts with TABLOCK">
+<meta name="twitter:description" content="How to use TABLOCK to enable minimal logging and speed up bulk data loads in SQL Server.">
 
 
 <script type="application/ld+json">
@@ -92,12 +98,51 @@
       "position":  1 ,
       "name": "Posts",
       "item": "https://arjunsajeevan.com/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "SQL Server Performance: Accelerating Inserts with TABLOCK",
+      "item": "https://arjunsajeevan.com/posts/sql-tablock-performance/"
     }
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "SQL Server Performance: Accelerating Inserts with TABLOCK",
+  "name": "SQL Server Performance: Accelerating Inserts with TABLOCK",
+  "description": "How to use TABLOCK to enable minimal logging and speed up bulk data loads in SQL Server.",
+  "keywords": [
+    "SQL Server", "Performance Tuning", "ETL", "Data Engineering"
+  ],
+  "articleBody": "Bulk inserting millions of rows into staging tables sounds simple—until row-level locking and full transaction logging turn it into a major pipeline bottleneck.\nWhat is TABLOCK? TABLOCK is a table-level lock hint. While row-level locking is great for concurrency, it is expensive for massive ETL jobs. By using TABLOCK, you tell SQL Server to take a single lock on the entire table.\nWhy does it make Inserts faster? Minimal Logging: When used with a SELECT INTO or an INSERT INTO ... SELECT on a heap (a table without a clustered index), TABLOCK allows for “Minimal Logging,” which significantly reduces I/O. Reduced Lock Overhead: The engine doesn’t have to manage millions of individual row locks. Parallelism: In some configurations, it allows multiple threads to write to the table simultaneously.Since it locks the whole table, other users won’t be able to write to it until your job is done The Command: INSERT INTO TargetTable WITH (TABLOCK) SELECT * FROM SourceTable; ",
+  "wordCount" : "158",
+  "inLanguage": "en",
+  "datePublished": "2026-02-21T00:00:00Z",
+  "dateModified": "2026-02-21T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Arjun Sajeevan"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://arjunsajeevan.com/posts/sql-tablock-performance/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Arjun Sajeevan",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://arjunsajeevan.com/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
-<body class="list" id="top">
+<body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
@@ -129,25 +174,45 @@
         </ul>
     </nav>
 </header>
-<main class="main"> 
-<header class="page-header">
-  <h1>
-    Posts
-  </h1>
-</header>
+<main class="main">
 
-<article class="post-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">SQL Server Performance: Accelerating Inserts with TABLOCK
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>Bulk inserting millions of rows into staging tables sounds simple—until row-level locking and full transaction logging turn it into a major pipeline bottleneck.
-What is TABLOCK? TABLOCK is a table-level lock hint. While row-level locking is great for concurrency, it is expensive for massive ETL jobs. By using TABLOCK, you tell SQL Server to take a single lock on the entire table.
-Why does it make Inserts faster? Minimal Logging: When used with a SELECT INTO or an INSERT INTO ... SELECT on a heap (a table without a clustered index), TABLOCK allows for “Minimal Logging,” which significantly reduces I/O. Reduced Lock Overhead: The engine doesn’t have to manage millions of individual row locks. Parallelism: In some configurations, it allows multiple threads to write to the table simultaneously.Since it locks the whole table, other users won’t be able to write to it until your job is done The Command: INSERT INTO TargetTable WITH (TABLOCK) SELECT * FROM SourceTable; </p>
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      SQL Server Performance: Accelerating Inserts with TABLOCK
+    </h1>
+    <div class="post-description">
+      How to use TABLOCK to enable minimal logging and speed up bulk data loads in SQL Server.
+    </div>
+    <div class="post-meta"><span title='2026-02-21 00:00:00 +0000 UTC'>February 21, 2026</span>&nbsp;·&nbsp;<span>Arjun Sajeevan</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>Bulk inserting millions of rows into staging tables sounds simple—until row-level locking and full transaction logging turn it into a major pipeline bottleneck.</p>
+<h3 id="what-is-tablock">What is TABLOCK?<a hidden class="anchor" aria-hidden="true" href="#what-is-tablock">#</a></h3>
+<p><code>TABLOCK</code> is a table-level lock hint. While row-level locking is great for concurrency, it is expensive for massive ETL jobs. By using <code>TABLOCK</code>, you tell SQL Server to take a single lock on the entire table.</p>
+<h3 id="why-does-it-make-inserts-faster">Why does it make Inserts faster?<a hidden class="anchor" aria-hidden="true" href="#why-does-it-make-inserts-faster">#</a></h3>
+<ul>
+<li><strong>Minimal Logging:</strong> When used with a <code>SELECT INTO</code> or an <code>INSERT INTO ... SELECT</code> on a heap (a table without a clustered index), <code>TABLOCK</code> allows for &ldquo;Minimal Logging,&rdquo; which significantly reduces I/O.</li>
+<li><strong>Reduced Lock Overhead:</strong> The engine doesn&rsquo;t have to manage millions of individual row locks.</li>
+<li><strong>Parallelism:</strong> In some configurations, it allows multiple threads to write to the table simultaneously.Since it locks the whole table, other users won&rsquo;t be able to write to it until your job is done</li>
+</ul>
+<h3 id="the-command">The Command:<a hidden class="anchor" aria-hidden="true" href="#the-command">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> TargetTable <span style="color:#66d9ef">WITH</span> (TABLOCK)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> SourceTable;
+</span></span></code></pre></div>
+
   </div>
-  <footer class="entry-footer"><span title='2026-02-21 00:00:00 +0000 UTC'>February 21, 2026</span>&nbsp;·&nbsp;<span>Arjun Sajeevan</span></footer>
-  <a class="entry-link" aria-label="post link to SQL Server Performance: Accelerating Inserts with TABLOCK" href="https://arjunsajeevan.com/posts/sql-tablock-performance/"></a>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://arjunsajeevan.com/tags/sql-server/">SQL Server</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/performance-tuning/">Performance Tuning</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/etl/">ETL</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/data-engineering/">Data Engineering</a></li>
+    </ul>
+  </footer>
 </article>
     </main>
     
