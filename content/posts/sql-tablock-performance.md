@@ -1,10 +1,4 @@
 ---
-title: "Sql Tablock Performance"
-date: 2026-02-21T20:04:52+05:30
-draft: true
----
-
----
 title: "SQL Server Performance: Accelerating Inserts with TABLOCK"
 date: 2026-02-21
 draft: false
