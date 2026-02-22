@@ -1,0 +1,25 @@
+# --- Data Engineering Pipeline ---
+# Ignore raw datasets and processed CSVs
+projects-code/realtime-ecommerce-pipeline/data/
+
+# Ignore Python environment and cache
+__pycache__/
+*.pyc
+.venv/
+.env
+*.log
+
+# --- Docker & Infrastructure ---
+# Ignore local container metadata and data persistence
+.docker/
+docker/volumes/
+
+# --- Hugo Website ---
+# Ignore temporary build folders (since we use /docs for production)
+public/
+resources/
+.hugo_build.lock
+
+# --- System & Misc ---
+.DS_Store
+Thumbs.db
