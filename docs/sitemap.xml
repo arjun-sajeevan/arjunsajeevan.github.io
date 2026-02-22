@@ -3,7 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://arjunsajeevan.com/</loc>
-    <lastmod>2026-02-21T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-22T11:39:14+05:30</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/projects/</loc>
+    <lastmod>2026-02-22T11:39:14+05:30</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/projects/streaming-analytics/</loc>
+    <lastmod>2026-02-22T11:39:14+05:30</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/data-engineering/</loc>
     <lastmod>2026-02-21T00:00:00+00:00</lastmod>
@@ -27,7 +33,5 @@
     <lastmod>2026-02-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/categories/</loc>
-  </url><url>
-    <loc>https://arjunsajeevan.com/projects/</loc>
   </url>
 </urlset>

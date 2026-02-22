@@ -6,8 +6,15 @@
     <description>Recent content on Arjun Sajeevan</description>
     <generator>Hugo -- 0.156.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Feb 2026 11:39:14 +0530</lastBuildDate>
     <atom:link href="https://arjunsajeevan.com/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Streaming Analytics</title>
+      <link>https://arjunsajeevan.com/projects/streaming-analytics/</link>
+      <pubDate>Sun, 22 Feb 2026 11:39:14 +0530</pubDate>
+      <guid>https://arjunsajeevan.com/projects/streaming-analytics/</guid>
+      <description></description>
+    </item>
     <item>
       <title>SQL Server Performance: Accelerating Inserts with TABLOCK</title>
       <link>https://arjunsajeevan.com/posts/sql-tablock-performance/</link>
