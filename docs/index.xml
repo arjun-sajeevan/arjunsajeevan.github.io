@@ -22,5 +22,12 @@
       <guid>https://arjunsajeevan.com/posts/sql-tablock-performance/</guid>
       <description>How to use TABLOCK to enable minimal logging and speed up bulk data loads in SQL Server.</description>
     </item>
+    <item>
+      <title></title>
+      <link>https://arjunsajeevan.com/posts/hadoop-to-datalakehouse/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/posts/hadoop-to-datalakehouse/</guid>
+      <description></description>
+    </item>
   </channel>
 </rss>
