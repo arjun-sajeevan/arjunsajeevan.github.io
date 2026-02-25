@@ -6,13 +6,41 @@
     <description>Recent content in Tags on Arjun Sajeevan</description>
     <generator>Hugo -- 0.156.0</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Feb 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 25 Feb 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://arjunsajeevan.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Architecture</title>
+      <link>https://arjunsajeevan.com/tags/architecture/</link>
+      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Big Data</title>
+      <link>https://arjunsajeevan.com/tags/big-data/</link>
+      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/big-data/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Data Engineering</title>
       <link>https://arjunsajeevan.com/tags/data-engineering/</link>
-      <pubDate>Sat, 21 Feb 2026 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
       <guid>https://arjunsajeevan.com/tags/data-engineering/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Data Lakehouse</title>
+      <link>https://arjunsajeevan.com/tags/data-lakehouse/</link>
+      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/data-lakehouse/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hadoop</title>
+      <link>https://arjunsajeevan.com/tags/hadoop/</link>
+      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/hadoop/</guid>
       <description></description>
     </item>
     <item>
