@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Big Data on Arjun Sajeevan</title>
-    <link>https://arjunsajeevan.com/tags/big-data/</link>
-    <description>Recent content in Big Data on Arjun Sajeevan</description>
+    <title>Performance on Arjun Sajeevan</title>
+    <link>https://arjunsajeevan.com/tags/performance/</link>
+    <description>Recent content in Performance on Arjun Sajeevan</description>
     <generator>Hugo -- 0.156.0</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 26 Feb 2026 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://arjunsajeevan.com/tags/big-data/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://arjunsajeevan.com/tags/performance/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>PySpark DataFrames vs. Spark SQL: Which One Should You Use?</title>
       <link>https://arjunsajeevan.com/posts/spark-api-vs-sql/</link>
       <pubDate>Thu, 26 Feb 2026 00:00:00 +0000</pubDate>
       <guid>https://arjunsajeevan.com/posts/spark-api-vs-sql/</guid>
       <description>A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.</description>
-    </item>
-    <item>
-      <title>Modernizing Architecture: Migrating from Hadoop to Data Lakehouse</title>
-      <link>https://arjunsajeevan.com/posts/hadoop-to-datalakehouse/</link>
-      <pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate>
-      <guid>https://arjunsajeevan.com/posts/hadoop-to-datalakehouse/</guid>
-      <description>A deep dive into why enterprises are moving away from legacy Hadoop systems toward a unified Data Lakehouse architecture.</description>
     </item>
   </channel>
 </rss>

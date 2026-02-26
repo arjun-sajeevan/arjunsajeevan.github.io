@@ -2,16 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://arjunsajeevan.com/tags/architecture/</loc>
-    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://arjunsajeevan.com/</loc>
-    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/big-data/</loc>
-    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/data-engineering/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/performance/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/posts/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/pyspark/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/posts/spark-api-vs-sql/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/spark-sql/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/</loc>
+    <lastmod>2026-02-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/architecture/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/data-lakehouse/</loc>
@@ -21,12 +39,6 @@
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/posts/hadoop-to-datalakehouse/</loc>
-    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://arjunsajeevan.com/posts/</loc>
-    <lastmod>2026-02-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://arjunsajeevan.com/tags/</loc>
     <lastmod>2026-02-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/projects/</loc>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>PySpark DataFrames vs. Spark SQL: Which One Should You Use? | Arjun Sajeevan</title>
+<meta name="keywords" content="PySpark, Spark SQL, Data Engineering, Big Data, Performance">
+<meta name="description" content="A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.">
+<meta name="author" content="Arjun Sajeevan">
+<link rel="canonical" href="https://arjunsajeevan.com/posts/spark-api-vs-sql/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://arjunsajeevan.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://arjunsajeevan.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://arjunsajeevan.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://arjunsajeevan.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://arjunsajeevan.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://arjunsajeevan.com/posts/spark-api-vs-sql/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://arjunsajeevan.com/posts/spark-api-vs-sql/">
+  <meta property="og:site_name" content="Arjun Sajeevan">
+  <meta property="og:title" content="PySpark DataFrames vs. Spark SQL: Which One Should You Use?">
+  <meta property="og:description" content="A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-02-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-02-26T00:00:00+00:00">
+    <meta property="article:tag" content="PySpark">
+    <meta property="article:tag" content="Spark SQL">
+    <meta property="article:tag" content="Data Engineering">
+    <meta property="article:tag" content="Big Data">
+    <meta property="article:tag" content="Performance">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PySpark DataFrames vs. Spark SQL: Which One Should You Use?">
+<meta name="twitter:description" content="A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://arjunsajeevan.com/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "PySpark DataFrames vs. Spark SQL: Which One Should You Use?",
+      "item": "https://arjunsajeevan.com/posts/spark-api-vs-sql/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "PySpark DataFrames vs. Spark SQL: Which One Should You Use?",
+  "name": "PySpark DataFrames vs. Spark SQL: Which One Should You Use?",
+  "description": "A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.",
+  "keywords": [
+    "PySpark", "Spark SQL", "Data Engineering", "Big Data", "Performance"
+  ],
+  "articleBody": "When building data pipelines in Apache Spark, one of the most common questions is: “Should I write this in Spark SQL or use the DataFrame API?”\nThe short answer regarding performance is neither. Both are powered by the Catalyst Optimizer, meaning Spark converts both into the same optimized physical plan under the hood.\nHowever, from a Data Engineering perspective, the choice significantly impacts how you build, test, scale, and maintain your code.\n1. The Core Similarity: The Optimizer Whether you use SQL or the API, Spark follows the same execution path:\nIt parses your code (SQL or API). It creates a Logical Plan. The Catalyst Optimizer optimizes it (e.g., pushing filters down to the source). It generates a Physical Plan that runs on the executors. Because of this, your choice should be based on maintainability and flexibility, not execution speed.\n2. Deep Dive: Advantages \u0026 Disadvantages The DataFrame API (Programmatic) This is the programmatic way of interacting with data using method chaining like .select(), .filter(), and .groupBy().\nPros\nType Safety \u0026 Errors: Better IDE support and auto-completion in Python. Many errors are caught earlier. Modularity: You can break down complex logic into small, reusable functions. Testing: It is significantly easier to write unit tests for DataFrame functions. Dynamic Logic: Easily supports conditions, loops, and parameter-driven transformations. Cons\nLearning Curve: Requires knowledge of PySpark syntax and programming concepts. Readability: Very long transformation chains can be harder for non-engineers to read. Spark SQL (Declarative) This allows you to write standard ANSI SQL queries against your data.\nPros\nUniversal Language: Easily understood by Analysts, PMs, and Data Scientists. Portability: SQL logic can move across many data platforms. Scanability: Complex joins, aggregations, and window functions are often clearer in SQL. Cons\nRuntime Errors: SQL strings are validated only when executed. Maintenance: Large SQL blocks are harder to modularize and reuse. Dynamic Logic: Requires string concatenation for conditional queries. 3. Why Data Engineers Prefer DataFrames for Pipelines Two major factors make the DataFrame API superior for production ETL: Dynamic Queries and Reusability.\nDynamic Queries Dynamic querying means adjusting logic based on runtime inputs (parameters, configs, user choices).\nIn SQL, this usually requires fragile string building. With DataFrames, you use native Python logic.\nExample\ndef get_filtered_data(df, region=None, min_sales=None): # Dynamically add filters based on input if region: df = df.where(f\"region == '{region}'\") if min_sales: df = df.where(f\"sales \u003e {min_sales}\") return df # Build your query on the fly final_df = get_filtered_data(raw_df, region=\"Europe\", min_sales=1000) Reusability (Write Once, Use Everywhere) In real projects, the same business logic appears across multiple pipelines. With DataFrames, you encapsulate logic into reusable functions.\nExample\ndef apply_german_tax(df): # Central business rule return df.withColumn(\"total_price\", df.price * 1.19) sales_df = apply_german_tax(raw_sales_df) audit_df = apply_german_tax(raw_audit_df) 4. When to Use What Scenario Recommended Tool Why Simple data exploration Spark SQL Fast to write and easy to inspect results Ad-hoc analytics / BI views Spark SQL Analysts can read and validate logic Complex ETL pipelines DataFrame API Modular, testable, maintainable Parameter-driven pipelines DataFrame API Supports dynamic logic Reusable transformations DataFrame API Functions/modules enable reuse Business presentation layer Spark SQL Clear and stakeholder-friendly Data engineering frameworks DataFrame API Needed for abstraction and automation ",
+  "wordCount" : "524",
+  "inLanguage": "en",
+  "datePublished": "2026-02-26T00:00:00Z",
+  "dateModified": "2026-02-26T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Arjun Sajeevan"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://arjunsajeevan.com/posts/spark-api-vs-sql/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Arjun Sajeevan",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://arjunsajeevan.com/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://arjunsajeevan.com/" accesskey="h" title="Arjun Sajeevan (Alt + H)">Arjun Sajeevan</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      PySpark DataFrames vs. Spark SQL: Which One Should You Use?
+    </h1>
+    <div class="post-description">
+      A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.
+    </div>
+    <div class="post-meta"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>Arjun Sajeevan</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>When building data pipelines in Apache Spark, one of the most common questions is: <em>&ldquo;Should I write this in Spark SQL or use the DataFrame API?&rdquo;</em></p>
+<p>The short answer regarding performance is <strong>neither</strong>. Both are powered by the <strong>Catalyst Optimizer</strong>, meaning Spark converts both into the same optimized physical plan under the hood.</p>
+<p>However, from a Data Engineering perspective, the choice significantly impacts how you build, test, scale, and maintain your code.</p>
+<hr>
+<h3 id="1-the-core-similarity-the-optimizer">1. The Core Similarity: The Optimizer<a hidden class="anchor" aria-hidden="true" href="#1-the-core-similarity-the-optimizer">#</a></h3>
+<p>Whether you use SQL or the API, Spark follows the same execution path:</p>
+<ol>
+<li>It parses your code (SQL or API).</li>
+<li>It creates a <strong>Logical Plan</strong>.</li>
+<li>The <strong>Catalyst Optimizer</strong> optimizes it (e.g., pushing filters down to the source).</li>
+<li>It generates a <strong>Physical Plan</strong> that runs on the executors.</li>
+</ol>
+<p>Because of this, your choice should be based on <strong>maintainability and flexibility</strong>, not execution speed.</p>
+<hr>
+<h3 id="2-deep-dive-advantages--disadvantages">2. Deep Dive: Advantages &amp; Disadvantages<a hidden class="anchor" aria-hidden="true" href="#2-deep-dive-advantages--disadvantages">#</a></h3>
+<h4 id="the-dataframe-api-programmatic"><strong>The DataFrame API (Programmatic)</strong><a hidden class="anchor" aria-hidden="true" href="#the-dataframe-api-programmatic">#</a></h4>
+<p>This is the programmatic way of interacting with data using method chaining like <code>.select()</code>, <code>.filter()</code>, and <code>.groupBy()</code>.</p>
+<p><strong>Pros</strong></p>
+<ul>
+<li><strong>Type Safety &amp; Errors:</strong> Better IDE support and auto-completion in Python. Many errors are caught earlier.</li>
+<li><strong>Modularity:</strong> You can break down complex logic into small, reusable functions.</li>
+<li><strong>Testing:</strong> It is significantly easier to write unit tests for DataFrame functions.</li>
+<li><strong>Dynamic Logic:</strong> Easily supports conditions, loops, and parameter-driven transformations.</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li><strong>Learning Curve:</strong> Requires knowledge of PySpark syntax and programming concepts.</li>
+<li><strong>Readability:</strong> Very long transformation chains can be harder for non-engineers to read.</li>
+</ul>
+<hr>
+<h4 id="spark-sql-declarative"><strong>Spark SQL (Declarative)</strong><a hidden class="anchor" aria-hidden="true" href="#spark-sql-declarative">#</a></h4>
+<p>This allows you to write standard ANSI SQL queries against your data.</p>
+<p><strong>Pros</strong></p>
+<ul>
+<li><strong>Universal Language:</strong> Easily understood by Analysts, PMs, and Data Scientists.</li>
+<li><strong>Portability:</strong> SQL logic can move across many data platforms.</li>
+<li><strong>Scanability:</strong> Complex joins, aggregations, and window functions are often clearer in SQL.</li>
+</ul>
+<p><strong>Cons</strong></p>
+<ul>
+<li><strong>Runtime Errors:</strong> SQL strings are validated only when executed.</li>
+<li><strong>Maintenance:</strong> Large SQL blocks are harder to modularize and reuse.</li>
+<li><strong>Dynamic Logic:</strong> Requires string concatenation for conditional queries.</li>
+</ul>
+<hr>
+<h3 id="3-why-data-engineers-prefer-dataframes-for-pipelines">3. Why Data Engineers Prefer DataFrames for Pipelines<a hidden class="anchor" aria-hidden="true" href="#3-why-data-engineers-prefer-dataframes-for-pipelines">#</a></h3>
+<p>Two major factors make the DataFrame API superior for production ETL: <strong>Dynamic Queries</strong> and <strong>Reusability</strong>.</p>
+<h4 id="dynamic-queries"><strong>Dynamic Queries</strong><a hidden class="anchor" aria-hidden="true" href="#dynamic-queries">#</a></h4>
+<p>Dynamic querying means adjusting logic based on runtime inputs (parameters, configs, user choices).</p>
+<p>In SQL, this usually requires fragile string building. With DataFrames, you use native Python logic.</p>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_filtered_data</span>(df, region<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, min_sales<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Dynamically add filters based on input</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> region:
+</span></span><span style="display:flex;"><span>        df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>where(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;region == &#39;</span><span style="color:#e6db74">{</span>region<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> min_sales:
+</span></span><span style="display:flex;"><span>        df <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>where(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;sales &gt; </span><span style="color:#e6db74">{</span>min_sales<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> df
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Build your query on the fly</span>
+</span></span><span style="display:flex;"><span>final_df <span style="color:#f92672">=</span> get_filtered_data(raw_df, region<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Europe&#34;</span>, min_sales<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span>)
+</span></span></code></pre></div><hr>
+<h4 id="reusability-write-once-use-everywhere"><strong>Reusability (Write Once, Use Everywhere)</strong><a hidden class="anchor" aria-hidden="true" href="#reusability-write-once-use-everywhere">#</a></h4>
+<p>In real projects, the same business logic appears across multiple pipelines. With DataFrames, you encapsulate logic into reusable functions.</p>
+<p><strong>Example</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">apply_german_tax</span>(df):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Central business rule</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> df<span style="color:#f92672">.</span>withColumn(<span style="color:#e6db74">&#34;total_price&#34;</span>, df<span style="color:#f92672">.</span>price <span style="color:#f92672">*</span> <span style="color:#ae81ff">1.19</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sales_df <span style="color:#f92672">=</span> apply_german_tax(raw_sales_df)
+</span></span><span style="display:flex;"><span>audit_df <span style="color:#f92672">=</span> apply_german_tax(raw_audit_df)
+</span></span></code></pre></div><hr>
+<h3 id="4-when-to-use-what">4. When to Use What<a hidden class="anchor" aria-hidden="true" href="#4-when-to-use-what">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Scenario</th>
+          <th>Recommended Tool</th>
+          <th>Why</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Simple data exploration</td>
+          <td><strong>Spark SQL</strong></td>
+          <td>Fast to write and easy to inspect results</td>
+      </tr>
+      <tr>
+          <td>Ad-hoc analytics / BI views</td>
+          <td><strong>Spark SQL</strong></td>
+          <td>Analysts can read and validate logic</td>
+      </tr>
+      <tr>
+          <td>Complex ETL pipelines</td>
+          <td><strong>DataFrame API</strong></td>
+          <td>Modular, testable, maintainable</td>
+      </tr>
+      <tr>
+          <td>Parameter-driven pipelines</td>
+          <td><strong>DataFrame API</strong></td>
+          <td>Supports dynamic logic</td>
+      </tr>
+      <tr>
+          <td>Reusable transformations</td>
+          <td><strong>DataFrame API</strong></td>
+          <td>Functions/modules enable reuse</td>
+      </tr>
+      <tr>
+          <td>Business presentation layer</td>
+          <td><strong>Spark SQL</strong></td>
+          <td>Clear and stakeholder-friendly</td>
+      </tr>
+      <tr>
+          <td>Data engineering frameworks</td>
+          <td><strong>DataFrame API</strong></td>
+          <td>Needed for abstraction and automation</td>
+      </tr>
+  </tbody>
+</table>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://arjunsajeevan.com/tags/pyspark/">PySpark</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/spark-sql/">Spark SQL</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/data-engineering/">Data Engineering</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/big-data/">Big Data</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/performance/">Performance</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://arjunsajeevan.com/">Arjun Sajeevan</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
