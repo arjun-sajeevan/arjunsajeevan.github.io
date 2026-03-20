@@ -4,23 +4,39 @@ languageCode = 'en-us'
 title = 'Arjun Sajeevan'
 theme = 'PaperMod'
 
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
 [params]
     env = "production"
     title = "Arjun Sajeevan"
-    description = "Data Engineer @ Dell Technologies | ETL, SQL, PySpark"
+    description = "Data Engineer at Dell Technologies in Bangalore. Specializing in PySpark, Apache Kafka, complex ETL pipelines, and legacy-to-cloud modernization."
     author = "Arjun Sajeevan"
+    mermaid = true
 
     [params.profileMode]
         enabled = true
-        title = "Arjun Sajeevan"
-        subtitle = "Data Engineer at Dell Technologies. Specializing in ETL, SQL, and PySpark. Currently mastering Lakehouse architectures."
-        
+        title = "<span style='font-size: 3.0rem; font-weight: 700;'>Structuring the Absurd</span>"
+        subtitle = """
+<div style="text-align: left; max-width: 1000px; margin: 0 auto;">
+<br> I build, scale, and modernize data systems.<br>
+Currently a Data Engineer at Dell Technologies, I focus on architecting high-performance pipelines and transitioning legacy infrastructure into the modern cloud. I enjoy the quiet chaos of turning massive datasets—often billions of rows—into clean, reliable, and lightning-fast platforms. <br>
+I believe in building in public and sharing the friction of software engineering. You will find my technical deep-dives, system architecture projects, and learning materials here. Fueled by curiosity and a strong cup of tea. <br><br>
+Explore my code on GitHub, or reach out on LinkedIn below.
+</div>
+"""
+
         [[params.profileMode.buttons]]
             name = "Posts"
             url = "/posts"
         [[params.profileMode.buttons]]
             name = "View Projects"
             url = "/projects"
+        [[params.profileMode.buttons]]
+            name = "Resume"
+            url = "/Arjun_Sajeevan.pdf"
 
     [[params.socialIcons]]
         name = "github"
@@ -28,3 +44,20 @@ theme = 'PaperMod'
     [[params.socialIcons]]
         name = "linkedin"
         url = "https://www.linkedin.com/in/arjun-sajeevan-66634a167"
+
+    [menu]
+    [[menu.main]]
+        identifier = "projects"
+        name = "Projects"
+        url = "/projects/"
+        weight = 10
+    [[menu.main]]
+        identifier = "posts"
+        name = "Posts"
+        url = "/posts/"
+        weight = 20
+    [[menu.main]]
+        identifier = "contact"
+        name = "Contact"
+        url = "/contact/"
+        weight = 30

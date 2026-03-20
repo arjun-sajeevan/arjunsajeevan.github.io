@@ -1,0 +1,21 @@
+{{ if .Params.mermaid }}
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    mermaid.initialize({ startOnLoad: true, theme: "dark" });
+  });
+</script>
+<style>
+  .mermaid {
+    width: 100%;
+    overflow-x: auto;
+    padding: 24px 0;
+  }
+  .mermaid svg {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 200px;
+  }
+</style>
+{{ end }}
