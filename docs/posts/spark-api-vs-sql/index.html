@@ -10,7 +10,7 @@
 <meta name="description" content="A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.">
 <meta name="author" content="Arjun Sajeevan">
 <link rel="canonical" href="https://arjunsajeevan.com/posts/spark-api-vs-sql/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://arjunsajeevan.com/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://arjunsajeevan.com/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://arjunsajeevan.com/favicon-32x32.png">
@@ -51,12 +51,6 @@
             }
         }
 
-        @media (prefers-color-scheme: light) {
-            .list::-webkit-scrollbar-thumb {
-                border-color: var(--code-bg);
-            }
-        }
-
     </style>
 </noscript>
 <script>
@@ -74,7 +68,7 @@
   <meta property="og:site_name" content="Arjun Sajeevan">
   <meta property="og:title" content="PySpark DataFrames vs. Spark SQL: Which One Should You Use?">
   <meta property="og:description" content="A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.">
-  <meta property="og:locale" content="en-us">
+  <meta property="og:locale" content="en_us">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
     <meta property="article:published_time" content="2026-02-26T00:00:00+00:00">
@@ -84,9 +78,10 @@
     <meta property="article:tag" content="Data Engineering">
     <meta property="article:tag" content="Big Data">
     <meta property="article:tag" content="Performance">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PySpark DataFrames vs. Spark SQL: Which One Should You Use?">
-<meta name="twitter:description" content="A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="PySpark DataFrames vs. Spark SQL: Which One Should You Use?">
+  <meta name="twitter:description" content="A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.">
 
 
 <script type="application/ld+json">
@@ -145,17 +140,17 @@
 </head>
 <body id="top">
     <header class="header">
-    <nav class="nav">
+    <nav class="header-nav">
         <div class="logo">
             <a href="https://arjunsajeevan.com/" accesskey="h" title="Arjun Sajeevan (Alt + H)">Arjun Sajeevan</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
                         <circle cx="12" cy="12" r="5"></circle>
@@ -171,7 +166,7 @@
                 </button>
             </div>
         </div>
-        <ul id="menu">
+        <ul id="menu" class="menu">
             <li>
                 <a href="https://arjunsajeevan.com/projects/" title="Projects">
                     <span>Projects</span>
@@ -201,11 +196,13 @@
     <div class="post-description">
       A deep dive into performance, dynamic queries, and reusability to help you choose the right tool for your Spark pipelines.
     </div>
-    <div class="post-meta"><span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>Arjun Sajeevan</span>
+    <div class="post-meta">
+
+<span title='2026-02-26 00:00:00 +0000 UTC'>February 26, 2026</span>&nbsp;·&nbsp;<span>Arjun Sajeevan</span>
 
 </div>
   </header> 
-  <div class="post-content"><p>When building data pipelines in Apache Spark, one of the most common questions is: <em>&ldquo;Should I write this in Spark SQL or use the DataFrame API?&rdquo;</em></p>
+  <div class="post-content md-content"><p>When building data pipelines in Apache Spark, one of the most common questions is: <em>&ldquo;Should I write this in Spark SQL or use the DataFrame API?&rdquo;</em></p>
 <p>The short answer regarding performance is <strong>neither</strong>. Both are powered by the <strong>Catalyst Optimizer</strong>, meaning Spark converts both into the same optimized physical plan under the hood.</p>
 <p>However, from a Data Engineering perspective, the choice significantly impacts how you build, test, scale, and maintain your code.</p>
 <hr>
@@ -345,15 +342,19 @@
 <footer class="footer">
         <span>&copy; 2026 <a href="https://arjunsajeevan.com/">Arjun Sajeevan</a></span> · 
 
+    
+    
     <span>
         Powered by
-        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
         <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
     </span>
 </footer>
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-        <path d="M12 6H0l6-6z" />
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
     </svg>
 </a>
 
@@ -392,14 +393,13 @@
 
 </script>
 <script>
-    var mybutton = document.getElementById("top-link");
+    var toplink = document.getElementById("top-link");
     window.onscroll = function () {
-        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
         } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
+            toplink.classList.add("hidden");
         }
     };
 

@@ -30,10 +30,10 @@ Even though we're building this locally, the architecture mirrors what you'd see
 
 ```mermaid
 graph TD
-    A[raw_sales.csv <br/> Messy Data] --> B[Python Ingestion Script]
-    B --> C{Validation & Cleaning Rules}
-    C -->|Corrupt/Duplicate| D[Rejected Records Counter]
-    C -->|Clean/Validated| E[cleaned_sales.csv <br/> Ready for Analysis]
+    A["raw_sales.csv (Messy Data)"] --> B["Python Ingestion Script"]
+    B --> C{"Validation & Cleaning Rules"}
+    C -->|"Corrupt/Duplicate"| D["Rejected Records Counter"]
+    C -->|"Clean/Validated"| E["cleaned_sales.csv (Ready for Analysis)"]
 ```
 
 The pipeline operates **row-by-row** to minimize memory usage. This is crucial in data engineering: we only hold one record in memory at any given time, meaning this script could theoretically process massive files without crashing your computer!
