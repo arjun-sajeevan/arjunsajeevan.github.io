@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Data Engineering Foundations for Beginners: Your First Data Pipeline | Arjun Sajeevan</title>
+<meta name="keywords" content="Data Engineering, Python, Data Quality, Ingestion, Beginner">
+<meta name="description" content="A foundational batch processing pipeline that ingests raw, messy sales data, enforces schemas, executes data quality checks, and exports clean datasets. Perfect for beginners to practice!">
+<meta name="author" content="Arjun Sajeevan">
+<link rel="canonical" href="https://arjunsajeevan.com/projects/sales-ingestion-cleansing/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://arjunsajeevan.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://arjunsajeevan.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://arjunsajeevan.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://arjunsajeevan.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://arjunsajeevan.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://arjunsajeevan.com/projects/sales-ingestion-cleansing/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://arjunsajeevan.com/projects/sales-ingestion-cleansing/">
+  <meta property="og:site_name" content="Arjun Sajeevan">
+  <meta property="og:title" content="Data Engineering Foundations for Beginners: Your First Data Pipeline">
+  <meta property="og:description" content="A foundational batch processing pipeline that ingests raw, messy sales data, enforces schemas, executes data quality checks, and exports clean datasets. Perfect for beginners to practice!">
+  <meta property="og:locale" content="en-us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2026-06-11T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-06-11T00:00:00+00:00">
+    <meta property="article:tag" content="Data Engineering">
+    <meta property="article:tag" content="Python">
+    <meta property="article:tag" content="Data Quality">
+    <meta property="article:tag" content="Ingestion">
+    <meta property="article:tag" content="Beginner">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Data Engineering Foundations for Beginners: Your First Data Pipeline">
+<meta name="twitter:description" content="A foundational batch processing pipeline that ingests raw, messy sales data, enforces schemas, executes data quality checks, and exports clean datasets. Perfect for beginners to practice!">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Projects",
+      "item": "https://arjunsajeevan.com/projects/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Data Engineering Foundations for Beginners: Your First Data Pipeline",
+      "item": "https://arjunsajeevan.com/projects/sales-ingestion-cleansing/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Data Engineering Foundations for Beginners: Your First Data Pipeline",
+  "name": "Data Engineering Foundations for Beginners: Your First Data Pipeline",
+  "description": "A foundational batch processing pipeline that ingests raw, messy sales data, enforces schemas, executes data quality checks, and exports clean datasets. Perfect for beginners to practice!",
+  "keywords": [
+    "Data Engineering", "Python", "Data Quality", "Ingestion", "Beginner"
+  ],
+  "articleBody": "Level: Beginner (Foundations)\nTech Stack: Python · CSV · Clean Code Design\nSource Code \u0026 Practice Files: View on GitHub\nWelcome to Data Engineering! If you are just starting out in data engineering, you might be overwhelmed by tools like PySpark, Airflow, Snowflake, or Databricks. But here’s a secret: you don’t need any of those to understand the fundamentals of data engineering.\nEvery enterprise data platform starts with one core concept: Ingestion. Before data can be analyzed, it must be loaded, cleaned, and verified.\nIn this project, we are going back to basics. I built a local Python batch processing pipeline—using just standard Python (no complex frameworks!)—that ingests a raw, messy CSV sales dataset, standardizes data types, removes duplicates, filters invalid records, and outputs a clean CSV file ready for downstream analysis.\nThink of this as a teaching tool. I have provided the sample files and code so you can practice this yourself and understand the foundation!\nArchitecture \u0026 Data Flow Even though we’re building this locally, the architecture mirrors what you’d see in an enterprise environment:\ngraph TD A[raw_sales.csv Messy Data] --\u003e B[Python Ingestion Script] B --\u003e C{Validation \u0026 Cleaning Rules} C --\u003e|Corrupt/Duplicate| D[Rejected Records Counter] C --\u003e|Clean/Validated| E[cleaned_sales.csv Ready for Analysis] The pipeline operates row-by-row to minimize memory usage. This is crucial in data engineering: we only hold one record in memory at any given time, meaning this script could theoretically process massive files without crashing your computer!\nHow to Practice This Yourself You can find all the files for this project in the projects-code folder on my GitHub.\nDownload raw_sales.csv and ingest.py. Open the code and read through the functions. Run python ingest.py in your terminal. Try modifying raw_sales.csv to add your own messy data and see how the pipeline handles it! Key Engineering Challenges \u0026 Solutions Here are the foundational problems we solve in this project:\n1. Robust Type Parsing (Defensive Programming) Raw text formats (like CSV) store all columns as strings. To perform math, we must convert values like \" $14.50 \" and \"N/A\" into float numbers or None without crashing the entire script.\nI created type-safe helper functions that wrap conversions in try-except blocks:\ndef clean_price(price_str): if not price_str: return None # Strip spaces and dollar signs clean_str = price_str.strip().replace(\"$\", \"\") try: return float(clean_str) except ValueError: return None 2. Multi-Format Date Standardisation Dates in the raw source are often formatted inconsistently (e.g. YYYY-MM-DD and YYYY/MM/DD). We use a loop to check multiple configurations, converting all successful hits to the ISO standard YYYY-MM-DD:\ndef parse_date(date_str): if not date_str: return None clean_str = date_str.strip() for fmt in [\"%Y-%m-%d\", \"%Y/%m/%d\"]: try: return datetime.strptime(clean_str, fmt).strftime(\"%Y-%m-%d\") except ValueError: continue return None 3. Hashed In-Memory Deduplication Network retries often cause duplicate events. We use a Python set() of transaction IDs to check if a row was already processed. If it was present in the set, the record is skipped.\nif txn_id in seen_transactions: rejected_duplicates += 1 continue seen_transactions.add(txn_id) 4. Metrics-Driven Ingestion Report A silent failure is a data engineer’s worst nightmare! If data is missing, we need to know why. The script tracks the processing state of every single row, printing a detailed Pipeline Audit Report on completion:\n--- Pipeline Audit Report --- 📥 Total Raw Records Processed: 12 📤 Cleaned Records Exported: 5 ❌ Rejected Records Details: - Missing TXN ID: 1 - Duplicates: 2 - Invalid/Missing Date: 1 - Invalid/Missing Price: 1 - Invalid/Missing Qty: 1 - Missing Product ID: 1 ----------------------------- Key Takeaways for Beginners Keep Raw Immutable: Raw files are never modified. Ingestion must always be repeatable. If you mess up, you can always delete cleaned_sales.csv and try again. Crash Prevention: Upstream formats cannot be trusted. Type casting must be protected by error-handling logic. Traceability: Auditing statistics must be logged so data engineering teams can track data health metrics over time. Welcome to the world of Data Engineering!\n",
+  "wordCount" : "644",
+  "inLanguage": "en",
+  "datePublished": "2026-06-11T00:00:00Z",
+  "dateModified": "2026-06-11T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Arjun Sajeevan"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://arjunsajeevan.com/projects/sales-ingestion-cleansing/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Arjun Sajeevan",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://arjunsajeevan.com/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://arjunsajeevan.com/" accesskey="h" title="Arjun Sajeevan (Alt + H)">Arjun Sajeevan</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://arjunsajeevan.com/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://arjunsajeevan.com/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://arjunsajeevan.com/contact/" title="Contact">
+                    <span>Contact</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Data Engineering Foundations for Beginners: Your First Data Pipeline
+    </h1>
+    <div class="post-description">
+      A foundational batch processing pipeline that ingests raw, messy sales data, enforces schemas, executes data quality checks, and exports clean datasets. Perfect for beginners to practice!
+    </div>
+    <div class="post-meta"><span title='2026-06-11 00:00:00 +0000 UTC'>June 11, 2026</span>&nbsp;·&nbsp;<span>Arjun Sajeevan</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><strong>Level:</strong> Beginner (Foundations)<br>
+<strong>Tech Stack:</strong> Python · CSV · Clean Code Design<br>
+<strong>Source Code &amp; Practice Files:</strong> <a href="https://github.com/arjun-sajeevan/arjunsajeevan.github.io/tree/main/projects-code/sales-ingestion-cleansing">View on GitHub</a></p>
+<hr>
+<h2 id="welcome-to-data-engineering">Welcome to Data Engineering!<a hidden class="anchor" aria-hidden="true" href="#welcome-to-data-engineering">#</a></h2>
+<p>If you are just starting out in data engineering, you might be overwhelmed by tools like PySpark, Airflow, Snowflake, or Databricks. But here&rsquo;s a secret: <strong>you don&rsquo;t need any of those to understand the fundamentals of data engineering.</strong></p>
+<p>Every enterprise data platform starts with one core concept: <strong>Ingestion</strong>. Before data can be analyzed, it must be loaded, cleaned, and verified.</p>
+<p>In this project, we are going back to basics. I built a local Python batch processing pipeline—using just standard Python (no complex frameworks!)—that ingests a raw, messy CSV sales dataset, standardizes data types, removes duplicates, filters invalid records, and outputs a clean CSV file ready for downstream analysis.</p>
+<p>Think of this as a <strong>teaching tool</strong>. I have provided the sample files and code so you can practice this yourself and understand the foundation!</p>
+<hr>
+<h2 id="architecture--data-flow">Architecture &amp; Data Flow<a hidden class="anchor" aria-hidden="true" href="#architecture--data-flow">#</a></h2>
+<p>Even though we&rsquo;re building this locally, the architecture mirrors what you&rsquo;d see in an enterprise environment:</p>
+<div class="mermaid">graph TD
+    A[raw_sales.csv &lt;br/&gt; Messy Data] --&gt; B[Python Ingestion Script]
+    B --&gt; C{Validation &amp; Cleaning Rules}
+    C --&gt;|Corrupt/Duplicate| D[Rejected Records Counter]
+    C --&gt;|Clean/Validated| E[cleaned_sales.csv &lt;br/&gt; Ready for Analysis]</div>
+<p>The pipeline operates <strong>row-by-row</strong> to minimize memory usage. This is crucial in data engineering: we only hold one record in memory at any given time, meaning this script could theoretically process massive files without crashing your computer!</p>
+<hr>
+<h2 id="how-to-practice-this-yourself">How to Practice This Yourself<a hidden class="anchor" aria-hidden="true" href="#how-to-practice-this-yourself">#</a></h2>
+<p>You can find all the files for this project in the <a href="https://github.com/arjun-sajeevan/arjunsajeevan.github.io/tree/main/projects-code/sales-ingestion-cleansing">projects-code folder</a> on my GitHub.</p>
+<ol>
+<li>Download <code>raw_sales.csv</code> and <code>ingest.py</code>.</li>
+<li>Open the code and read through the functions.</li>
+<li>Run <code>python ingest.py</code> in your terminal.</li>
+<li>Try modifying <code>raw_sales.csv</code> to add your own messy data and see how the pipeline handles it!</li>
+</ol>
+<hr>
+<h2 id="key-engineering-challenges--solutions">Key Engineering Challenges &amp; Solutions<a hidden class="anchor" aria-hidden="true" href="#key-engineering-challenges--solutions">#</a></h2>
+<p>Here are the foundational problems we solve in this project:</p>
+<h3 id="1-robust-type-parsing-defensive-programming">1. Robust Type Parsing (Defensive Programming)<a hidden class="anchor" aria-hidden="true" href="#1-robust-type-parsing-defensive-programming">#</a></h3>
+<p>Raw text formats (like CSV) store all columns as strings. To perform math, we must convert values like <code>&quot; $14.50 &quot;</code> and <code>&quot;N/A&quot;</code> into float numbers or <code>None</code> without crashing the entire script.</p>
+<p>I created type-safe helper functions that wrap conversions in <code>try-except</code> blocks:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">clean_price</span>(price_str):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> price_str:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Strip spaces and dollar signs</span>
+</span></span><span style="display:flex;"><span>    clean_str <span style="color:#f92672">=</span> price_str<span style="color:#f92672">.</span>strip()<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;$&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> float(clean_str)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span></code></pre></div><h3 id="2-multi-format-date-standardisation">2. Multi-Format Date Standardisation<a hidden class="anchor" aria-hidden="true" href="#2-multi-format-date-standardisation">#</a></h3>
+<p>Dates in the raw source are often formatted inconsistently (e.g. <code>YYYY-MM-DD</code> and <code>YYYY/MM/DD</code>). We use a loop to check multiple configurations, converting all successful hits to the ISO standard <code>YYYY-MM-DD</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">parse_date</span>(date_str):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> date_str:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    clean_str <span style="color:#f92672">=</span> date_str<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> fmt <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#34;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74">&#34;%Y/%m/</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#34;</span>]:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> datetime<span style="color:#f92672">.</span>strptime(clean_str, fmt)<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#34;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ValueError</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span></code></pre></div><h3 id="3-hashed-in-memory-deduplication">3. Hashed In-Memory Deduplication<a hidden class="anchor" aria-hidden="true" href="#3-hashed-in-memory-deduplication">#</a></h3>
+<p>Network retries often cause duplicate events. We use a Python <code>set()</code> of transaction IDs to check if a row was already processed. If it was present in the set, the record is skipped.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> txn_id <span style="color:#f92672">in</span> seen_transactions:
+</span></span><span style="display:flex;"><span>    rejected_duplicates <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>seen_transactions<span style="color:#f92672">.</span>add(txn_id)
+</span></span></code></pre></div><h3 id="4-metrics-driven-ingestion-report">4. Metrics-Driven Ingestion Report<a hidden class="anchor" aria-hidden="true" href="#4-metrics-driven-ingestion-report">#</a></h3>
+<p>A silent failure is a data engineer&rsquo;s worst nightmare! If data is missing, we need to know why. The script tracks the processing state of every single row, printing a detailed <strong>Pipeline Audit Report</strong> on completion:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>--- Pipeline Audit Report ---
+</span></span><span style="display:flex;"><span>📥 Total Raw Records Processed: 12
+</span></span><span style="display:flex;"><span>📤 Cleaned Records Exported:    5
+</span></span><span style="display:flex;"><span>❌ Rejected Records Details:
+</span></span><span style="display:flex;"><span>   - Missing TXN ID:         1
+</span></span><span style="display:flex;"><span>   - Duplicates:             2
+</span></span><span style="display:flex;"><span>   - Invalid/Missing Date:   1
+</span></span><span style="display:flex;"><span>   - Invalid/Missing Price:  1
+</span></span><span style="display:flex;"><span>   - Invalid/Missing Qty:    1
+</span></span><span style="display:flex;"><span>   - Missing Product ID:     1
+</span></span><span style="display:flex;"><span>-----------------------------
+</span></span></code></pre></div><hr>
+<h2 id="key-takeaways-for-beginners">Key Takeaways for Beginners<a hidden class="anchor" aria-hidden="true" href="#key-takeaways-for-beginners">#</a></h2>
+<ol>
+<li><strong>Keep Raw Immutable</strong>: Raw files are never modified. Ingestion must always be repeatable. If you mess up, you can always delete <code>cleaned_sales.csv</code> and try again.</li>
+<li><strong>Crash Prevention</strong>: Upstream formats cannot be trusted. Type casting must be protected by error-handling logic.</li>
+<li><strong>Traceability</strong>: Auditing statistics must be logged so data engineering teams can track data health metrics over time.</li>
+</ol>
+<p>Welcome to the world of Data Engineering!</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://arjunsajeevan.com/tags/data-engineering/">Data Engineering</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/python/">Python</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/data-quality/">Data Quality</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/ingestion/">Ingestion</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/beginner/">Beginner</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://arjunsajeevan.com/">Arjun Sajeevan</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
