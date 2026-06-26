@@ -6,20 +6,62 @@
     <description>Recent content in Tags on Arjun Sajeevan</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Jun 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 26 Jun 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://arjunsajeevan.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Data Engineering</title>
+      <link>https://arjunsajeevan.com/tags/data-engineering/</link>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/data-engineering/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Databricks</title>
+      <link>https://arjunsajeevan.com/tags/databricks/</link>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/databricks/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Dbt</title>
+      <link>https://arjunsajeevan.com/tags/dbt/</link>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/dbt/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Delta Lake</title>
+      <link>https://arjunsajeevan.com/tags/delta-lake/</link>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/delta-lake/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Intermediate</title>
+      <link>https://arjunsajeevan.com/tags/intermediate/</link>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/intermediate/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Medallion Architecture</title>
+      <link>https://arjunsajeevan.com/tags/medallion-architecture/</link>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/medallion-architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SQL</title>
+      <link>https://arjunsajeevan.com/tags/sql/</link>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/tags/sql/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Beginner</title>
       <link>https://arjunsajeevan.com/tags/beginner/</link>
       <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
       <guid>https://arjunsajeevan.com/tags/beginner/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data Engineering</title>
-      <link>https://arjunsajeevan.com/tags/data-engineering/</link>
-      <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>https://arjunsajeevan.com/tags/data-engineering/</guid>
       <description></description>
     </item>
     <item>

@@ -2,13 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://arjunsajeevan.com/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
+    <loc>https://arjunsajeevan.com/projects/dbt-databricks-ecommerce/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://arjunsajeevan.com/tags/beginner/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
+    <loc>https://arjunsajeevan.com/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/data-engineering/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/databricks/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/dbt/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/delta-lake/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/intermediate/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/medallion-architecture/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/projects/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/sql/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/beginner/</loc>
     <lastmod>2026-06-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/projects/sales-ingestion-cleansing/</loc>
@@ -20,13 +47,7 @@
     <loc>https://arjunsajeevan.com/tags/ingestion/</loc>
     <lastmod>2026-06-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://arjunsajeevan.com/projects/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://arjunsajeevan.com/tags/python/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://arjunsajeevan.com/tags/</loc>
     <lastmod>2026-06-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/etl/</loc>

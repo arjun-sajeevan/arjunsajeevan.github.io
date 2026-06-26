@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Analytics Engineering with dbt &amp; Databricks: Building a Production-Grade Data Warehouse | Arjun Sajeevan</title>
+<meta name="keywords" content="Data Engineering, dbt, Databricks, SQL, Medallion Architecture, Delta Lake, Intermediate">
+<meta name="description" content="A complete, end-to-end analytics engineering project — transforming raw, messy e-commerce data into a clean, tested, and documented warehouse using dbt and Databricks Community Edition.">
+<meta name="author" content="Arjun Sajeevan">
+<link rel="canonical" href="https://arjunsajeevan.com/projects/dbt-databricks-ecommerce/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://arjunsajeevan.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://arjunsajeevan.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://arjunsajeevan.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://arjunsajeevan.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://arjunsajeevan.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://arjunsajeevan.com/projects/dbt-databricks-ecommerce/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    mermaid.initialize({ startOnLoad: true, theme: "dark" });
+  });
+</script>
+<style>
+  .mermaid {
+    width: 100%;
+    overflow-x: auto;
+    padding: 24px 0;
+  }
+  .mermaid svg {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 200px;
+  }
+</style>
+<meta property="og:url" content="https://arjunsajeevan.com/projects/dbt-databricks-ecommerce/">
+  <meta property="og:site_name" content="Arjun Sajeevan">
+  <meta property="og:title" content="Analytics Engineering with dbt & Databricks: Building a Production-Grade Data Warehouse">
+  <meta property="og:description" content="A complete, end-to-end analytics engineering project — transforming raw, messy e-commerce data into a clean, tested, and documented warehouse using dbt and Databricks Community Edition.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects">
+    <meta property="article:published_time" content="2026-06-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-06-26T00:00:00+00:00">
+    <meta property="article:tag" content="Data Engineering">
+    <meta property="article:tag" content="Dbt">
+    <meta property="article:tag" content="Databricks">
+    <meta property="article:tag" content="SQL">
+    <meta property="article:tag" content="Medallion Architecture">
+    <meta property="article:tag" content="Delta Lake">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Analytics Engineering with dbt & Databricks: Building a Production-Grade Data Warehouse">
+  <meta name="twitter:description" content="A complete, end-to-end analytics engineering project — transforming raw, messy e-commerce data into a clean, tested, and documented warehouse using dbt and Databricks Community Edition.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Projects",
+      "item": "https://arjunsajeevan.com/projects/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Analytics Engineering with dbt \u0026 Databricks: Building a Production-Grade Data Warehouse",
+      "item": "https://arjunsajeevan.com/projects/dbt-databricks-ecommerce/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Analytics Engineering with dbt \u0026 Databricks: Building a Production-Grade Data Warehouse",
+  "name": "Analytics Engineering with dbt \u0026 Databricks: Building a Production-Grade Data Warehouse",
+  "description": "A complete, end-to-end analytics engineering project — transforming raw, messy e-commerce data into a clean, tested, and documented warehouse using dbt and Databricks Community Edition.",
+  "keywords": [
+    "Data Engineering", "dbt", "Databricks", "SQL", "Medallion Architecture", "Delta Lake", "Intermediate"
+  ],
+  "articleBody": "Level: Intermediate Data Engineering\nTech Stack: dbt · Databricks · Delta Lake · SQL · Jinja · hive_metastore\nSource Code \u0026 Practice Files: View on GitHub\nThe Problem: Raw Data Is Useless In my beginner pipeline project, we learned how to ingest raw CSV data and clean it with Python. But there’s a critical question that project doesn’t answer:\nOnce the data is ingested — then what?\nIn a real company, raw data lands in cloud storage every day. A dozen different analysts and data scientists need to query it — each writing their own transformations, often with subtle differences. One analyst filters out cancelled orders, another doesn’t. One team reports revenue in cents, another in dollars. The result is a classic problem in data teams: everyone has a different number, and nobody knows who is right.\nThis is the problem that Analytics Engineering — and specifically dbt — was built to solve.\nThe Solution: A Medallion Architecture on Databricks Instead of everyone transforming raw data independently, we build a single, shared transformation layer — a structured data warehouse where transformations are:\nWritten in SQL (readable by anyone) Version-controlled in Git (tracked like application code) Automatically tested (data quality is code, not hope) Auto-documented (a searchable docs site generated from YAML) We implement this using the industry-standard Medallion Architecture:\nflowchart LR subgraph Bronze[\"🥉 Bronze — Raw Data\"] S1[\"raw_orders.csv(31 rows, quality issues)\"] S2[\"raw_customers.csv(11 rows, duplicates)\"] S3[\"raw_products.csv(8 rows, casing issues)\"] end subgraph Silver[\"🥈 Silver — Staging Models\"] M1[\"stg_orders(cleaned, deduplicated)\"] M2[\"stg_customers(standardized)\"] M3[\"stg_products(normalized)\"] end subgraph Gold[\"🥇 Gold — Marts\"] F1[\"fct_orders(incremental)\"] D1[\"dim_customers\"] D2[\"dim_products\"] A1[\"monthly_revenue\"] end subgraph Analytics[\"📊 SQL Analytics\"] Q1[\"Revenue Dashboard\"] Q2[\"Product Performance\"] Q3[\"Customer Insights\"] end S1 --\u003e M1 S2 --\u003e M2 S3 --\u003e M3 M1 \u0026 M2 \u0026 M3 --\u003e F1 F1 --\u003e D1 \u0026 D2 \u0026 A1 D1 \u0026 D2 \u0026 A1 --\u003e Q1 \u0026 Q2 \u0026 Q3 style Bronze fill:none,stroke:#CD7F32,stroke-width:2px,stroke-dasharray: 5 5,color:#fff style Silver fill:none,stroke:#C0C0C0,stroke-width:2px,stroke-dasharray: 5 5,color:#fff style Gold fill:none,stroke:#FFD700,stroke-width:2px,stroke-dasharray: 5 5,color:#fff style Analytics fill:none,stroke:#FF6B35,stroke-width:2px,stroke-dasharray: 5 5,color:#fff Each layer has a clear contract: Bronze is raw and untouched, Silver is clean and typed, Gold is business-ready and analytical.\nThe Bronze Layer: Raw Data with Intentional Problems We load three CSV files into Databricks using dbt seed. Crucially, I’ve designed these files with real-world data quality issues baked in — the same problems you’d encounter in production:\nTable Quality Issues raw_orders Duplicate order_id, one null order_id, one negative quantity, mixed-case status (SHIPPED vs shipped) raw_customers Duplicate customer record (C003 appears twice), inconsistent country casing (india, INDIA, India) raw_products Inconsistent category casing (Electronics, electronics, ELECTRONICS) These aren’t mistakes — they’re the teaching material. Every transformation in the Silver layer exists to fix one of these problems.\nThe Silver Layer: Where the Real Work Happens The staging models are the heart of this project. Let’s walk through stg_orders.sql in detail:\nwith source as ( select * from {{ source('ecommerce_bronze', 'raw_orders') }} ), -- Step 1: Remove rows with null order_id filtered as ( select * from source where order_id is not null ), -- Step 2: Deduplicate — order O001 appears twice, keep the earliest deduplicated as ( select * from ( select *, row_number() over ( partition by order_id order by order_date asc ) as row_num from filtered ) where row_num = 1 ), -- Step 3: Clean and standardize cleaned as ( select order_id, customer_id, product_id, cast(order_date as date) as order_date, cast(quantity as int) as quantity, {{ cents_to_dollars('unit_price_cents') }} as unit_price, -- macro! upper(trim(status)) as status, lower(trim(payment_method)) as payment_method from deduplicated ), -- Step 4: Filter negative quantities final as ( select * from cleaned where quantity \u003e 0 ) select * from final Notice the pattern: each CTE handles exactly one concern. This is intentional. When a bug appears in production, you trace back through the CTEs one at a time until you find the culprit. Readable SQL is debuggable SQL.\ndbt Superpower #1: The Macro Notice {{ cents_to_dollars('unit_price_cents') }} in the query above. That’s a Jinja macro — a reusable SQL function defined once and used everywhere:\n{% macro cents_to_dollars(column_name) %} round({{ column_name }} / 100.0, 2) {% endmacro %} Why 100.0 and not 100? Because in SQL, dividing an integer by an integer performs integer division — 4999 / 100 = 49 (we lose the cents!). The .0 forces float division: 4999 / 100.0 = 49.99. If you ever need to change the rounding logic, you fix it in one place — not across every model that converts prices.\nThe Gold Layer: Business-Ready Analytics fct_orders — The Incremental Fact Table The fact table joins all three staging models into one enriched, queryable table:\n{{ config(materialized='incremental', unique_key='order_id') }} with orders as (select * from {{ ref('stg_orders') }}), customers as (select * from {{ ref('stg_customers') }}), products as (select * from {{ ref('stg_products') }}) select o.order_id, o.order_date, o.quantity, o.unit_price, o.quantity * o.unit_price as total_amount, o.status, o.payment_method, c.full_name as customer_name, c.country as customer_country, p.product_name, p.category as product_category, p.brand from orders o left join customers c on o.customer_id = c.customer_id left join products p on o.product_id = p.product_id dbt Superpower #2: Incremental Models The fct_orders model is materialized as incremental — one of dbt’s most powerful features. Here’s the logic that makes it work:\n{% if is_incremental() %} where order_date \u003e (select max(order_date) from {{ this }}) {% endif %} Why does this matter? Imagine your company has 3 years of order history — millions of rows. Without incremental, every dbt run rebuilds the entire table from scratch. That’s expensive, slow, and unnecessary.\nWith is_incremental():\nFirst run: Full table build (processes all history) Every subsequent run: Only processes orders newer than the latest date already in the table In production, this cuts a 2-hour full rebuild down to a 3-minute incremental run.\ndbt Superpower #3: Testing as Code This is where dbt changes how you think about data quality. Instead of manually checking tables, you declare your expectations as code in YAML:\n- name: stg_orders columns: - name: order_id tests: - not_null - unique - name: status tests: - accepted_values: values: ['DELIVERED', 'SHIPPED', 'CANCELLED', 'RETURNED'] Run dbt test and dbt generates SQL for each test, executes it against your Databricks tables, and reports results:\n18 of 18 PASS ............................................................. [PASS in 12.3s] Done. PASS=18 WARN=0 ERROR=0 SKIP=0 TOTAL=18 We also have a custom singular test for business logic that’s too nuanced for schema tests. The rule: after staging filters, no order should have a negative quantity.\n-- tests/assert_no_negative_quantity.sql -- If this returns ANY rows, the test FAILS. select order_id, quantity from {{ ref('stg_orders') }} where quantity \u003c= 0 These tests run in CI pipelines at real companies. If a test fails, the deployment stops — bad data never reaches analysts.\ndbt Superpower #4: The relationships Test (FK Validation) In the _marts__models.yml, we declare foreign key validation between tables:\n- name: customer_id tests: - relationships: to: ref('stg_customers') field: customer_id dbt generates a SQL query that checks: does every customer_id in fct_orders exist in stg_customers? This is the equivalent of a database foreign key constraint — but running as a testable, trackable CI check.\ndbt Superpower #5: Auto-Generated Documentation dbt Superpower #4: Source Freshness (dbt source freshness) We declare all three Bronze tables as dbt sources with freshness thresholds:\nsources: - name: ecommerce_bronze freshness: warn_after: {count: 24, period: hour} error_after: {count: 48, period: hour} loaded_at_field: \"current_timestamp()\" Running dbt source freshness checks whether your source data has been updated within the expected window. In production pipelines, this is how data teams detect when an upstream ETL job silently fails.\ndbt Superpower #5: The Auto-Generated Lineage Graph After running dbt docs generate \u0026\u0026 dbt docs serve, open localhost:8080 and click the graph icon in the bottom-right. This is what you see:\nThis diagram was generated automatically from your ref() calls in SQL. dbt reads your code, understands the dependencies, and draws this for free. You never have to maintain a data flow diagram again — it updates every time you run dbt docs generate.\nNotice fct_orders in the centre (highlighted purple) — it is the hub of the entire warehouse. Three sources flow into it, and three mart tables flow out of it. This is the Medallion Architecture made visible.\nThe Gold Layer: Dimension Tables dim_customers aggregates from fct_orders to give each customer a complete business profile:\nColumn Description lifetime_value Total revenue across all orders total_orders How many times they’ve ordered first_order_date Acquisition date return_rate_pct % of orders returned avg_order_value Spend per order dim_products similarly aggregates sales metrics per product — total units sold, confirmed units (delivered only), and total revenue.\nmonthly_revenue is the “executive summary” table: one row per month with order count, unique customers, total revenue, average order value, and the top-performing category for that month — derived using a window function.\nSQL Analytics in Databricks After dbt run, the Gold-layer tables are live and queryable directly in the Databricks SQL Editor. No additional BI tool needed — Databricks has built-in chart visualizations.\nRevenue by Payment Method SELECT payment_method, COUNT(DISTINCT order_id) AS total_orders, ROUND(SUM(total_amount), 2) AS total_revenue FROM dev.ecommerce_gold.fct_orders WHERE status IN ('DELIVERED', 'SHIPPED') GROUP BY payment_method ORDER BY total_revenue DESC; Business insight: Credit card customers account for over 55% of total revenue. A real business would use this to prioritise their payment gateway partnerships.\nProduct Revenue Performance SELECT product_name, category, total_revenue, total_units_sold FROM dev.ecommerce_gold.dim_products ORDER BY total_revenue DESC; Business insight: Wireless Headphones generates 2x the revenue of the next best product (Laptop Pro 15), despite both being Electronics. This is the kind of signal a product team would act on immediately — expand the headphones range, investigate the laptop.\nCustomer Lifetime Value SELECT full_name, country, total_orders, lifetime_value FROM dev.ecommerce_gold.dim_customers WHERE total_orders IS NOT NULL ORDER BY lifetime_value DESC; Business insight: The top 3 customers (Carlos Garcia, Aisha Patel, Arjun Sajeevan) each account for over $150 in lifetime value. A retention campaign targeting this cohort would protect a significant portion of revenue.\nHow to Follow Along Everything you need is in the GitHub repo. Here’s the full run sequence:\n# 1. Install dbt pip install dbt-databricks # 2. Copy the profile template and fill in your credentials cp profiles.yml.example ~/.dbt/profiles.yml # 3. Install packages dbt deps # 4. Test your connection dbt debug # 5. Load raw data into Databricks dbt seed # 6. Build the warehouse dbt run # 7. Run all 18 tests dbt test # 8. Generate and explore the docs + lineage graph dbt docs generate \u0026\u0026 dbt docs serve # 9. Check source freshness dbt source freshness Then open the Databricks SQL Editor and run the queries in analytics/ to build your charts.\nEngineering Decisions Why views for staging, tables for marts?\nStaging models are cheap to recompute — they’re just SQL on top of seeds. Building them as views means they always reflect the latest raw data without using Databricks compute. Marts are queried frequently by dashboards, so they need to be pre-computed tables for fast response times.\nWhy left join (not inner join) in fct_orders?\nAn inner join would silently drop orders if a customer_id or product_id doesn’t match — a data loss bug that’s hard to detect. Left join preserves all orders and leaves customer/product columns null if there’s no match. The relationships test then catches these orphaned records explicitly.\nWhy is the monthly_revenue model not incremental?\nMonthly aggregates need to be recalculated whenever historical data changes (late-arriving orders, status updates). An incremental strategy would be wrong here — we need a full rebuild to get accurate monthly totals. For a 3-month dataset, a full rebuild takes milliseconds anyway.\nKey Takeaways dbt makes SQL a first-class engineering artifact. Version-controlled, tested, documented SQL is fundamentally different from ad-hoc queries.\nThe Medallion Architecture is not just a pattern — it’s a contract. Every layer has a specific responsibility. Bronze is raw, Silver is clean, Gold is business-ready.\nIncremental models are the difference between a pipeline and a production pipeline. Always ask: “Do I need to reprocess historical data on every run?”\nTest your data like you test your code. dbt test in CI means data quality failures block deployments — exactly like unit test failures.\nDocumentation is a deliverable, not an afterthought. The dbt docs site is the gift you give to every analyst who comes after you.\nProject Resources Ready to build this yourself? Everything is in the repo — seeds, models, macros, tests, and analytics SQL files.\n👉 View the Full Project on GitHub\n",
+  "wordCount" : "2056",
+  "inLanguage": "en",
+  "datePublished": "2026-06-26T00:00:00Z",
+  "dateModified": "2026-06-26T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Arjun Sajeevan"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://arjunsajeevan.com/projects/dbt-databricks-ecommerce/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Arjun Sajeevan",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://arjunsajeevan.com/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://arjunsajeevan.com/" accesskey="h" title="Arjun Sajeevan (Alt + H)">Arjun Sajeevan</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="https://arjunsajeevan.com/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://arjunsajeevan.com/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://arjunsajeevan.com/contact/" title="Contact">
+                    <span>Contact</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      Analytics Engineering with dbt &amp; Databricks: Building a Production-Grade Data Warehouse
+    </h1>
+    <div class="post-description">
+      A complete, end-to-end analytics engineering project — transforming raw, messy e-commerce data into a clean, tested, and documented warehouse using dbt and Databricks Community Edition.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-06-26 00:00:00 +0000 UTC'>June 26, 2026</span>&nbsp;·&nbsp;<span>Arjun Sajeevan</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><p><strong>Level:</strong> Intermediate Data Engineering<br>
+<strong>Tech Stack:</strong> dbt · Databricks · Delta Lake · SQL · Jinja · hive_metastore<br>
+<strong>Source Code &amp; Practice Files:</strong> <a href="https://github.com/arjun-sajeevan/arjunsajeevan.github.io/tree/main/projects-code/dbt-databricks-ecommerce">View on GitHub</a></p>
+<hr>
+<h2 id="the-problem-raw-data-is-useless">The Problem: Raw Data Is Useless<a hidden class="anchor" aria-hidden="true" href="#the-problem-raw-data-is-useless">#</a></h2>
+<p>In my <a href="/projects/sales-ingestion-cleansing/">beginner pipeline project</a>, we learned how to ingest raw CSV data and clean it with Python. But there&rsquo;s a critical question that project doesn&rsquo;t answer:</p>
+<blockquote>
+<p><em>Once the data is ingested — then what?</em></p>
+</blockquote>
+<p>In a real company, raw data lands in cloud storage every day. A dozen different analysts and data scientists need to query it — each writing their own transformations, often with subtle differences. One analyst filters out cancelled orders, another doesn&rsquo;t. One team reports revenue in cents, another in dollars. The result is a classic problem in data teams: <strong>everyone has a different number, and nobody knows who is right.</strong></p>
+<p>This is the problem that <strong>Analytics Engineering</strong> — and specifically <strong>dbt</strong> — was built to solve.</p>
+<hr>
+<h2 id="the-solution-a-medallion-architecture-on-databricks">The Solution: A Medallion Architecture on Databricks<a hidden class="anchor" aria-hidden="true" href="#the-solution-a-medallion-architecture-on-databricks">#</a></h2>
+<p>Instead of everyone transforming raw data independently, we build a <strong>single, shared transformation layer</strong> — a structured data warehouse where transformations are:</p>
+<ul>
+<li><strong>Written in SQL</strong> (readable by anyone)</li>
+<li><strong>Version-controlled in Git</strong> (tracked like application code)</li>
+<li><strong>Automatically tested</strong> (data quality is code, not hope)</li>
+<li><strong>Auto-documented</strong> (a searchable docs site generated from YAML)</li>
+</ul>
+<p>We implement this using the industry-standard <strong>Medallion Architecture</strong>:</p>
+<div class="mermaid">flowchart LR
+    subgraph Bronze[&#34;🥉 Bronze — Raw Data&#34;]
+        S1[&#34;raw_orders.csv&lt;br/&gt;(31 rows, quality issues)&#34;]
+        S2[&#34;raw_customers.csv&lt;br/&gt;(11 rows, duplicates)&#34;]
+        S3[&#34;raw_products.csv&lt;br/&gt;(8 rows, casing issues)&#34;]
+    end
+
+    subgraph Silver[&#34;🥈 Silver — Staging Models&#34;]
+        M1[&#34;stg_orders&lt;br/&gt;(cleaned, deduplicated)&#34;]
+        M2[&#34;stg_customers&lt;br/&gt;(standardized)&#34;]
+        M3[&#34;stg_products&lt;br/&gt;(normalized)&#34;]
+    end
+
+    subgraph Gold[&#34;🥇 Gold — Marts&#34;]
+        F1[&#34;fct_orders&lt;br/&gt;(incremental)&#34;]
+        D1[&#34;dim_customers&#34;]
+        D2[&#34;dim_products&#34;]
+        A1[&#34;monthly_revenue&#34;]
+    end
+
+    subgraph Analytics[&#34;📊 SQL Analytics&#34;]
+        Q1[&#34;Revenue Dashboard&#34;]
+        Q2[&#34;Product Performance&#34;]
+        Q3[&#34;Customer Insights&#34;]
+    end
+
+    S1 --&gt; M1
+    S2 --&gt; M2
+    S3 --&gt; M3
+    M1 &amp; M2 &amp; M3 --&gt; F1
+    F1 --&gt; D1 &amp; D2 &amp; A1
+    D1 &amp; D2 &amp; A1 --&gt; Q1 &amp; Q2 &amp; Q3
+
+    style Bronze fill:none,stroke:#CD7F32,stroke-width:2px,stroke-dasharray: 5 5,color:#fff
+    style Silver fill:none,stroke:#C0C0C0,stroke-width:2px,stroke-dasharray: 5 5,color:#fff
+    style Gold fill:none,stroke:#FFD700,stroke-width:2px,stroke-dasharray: 5 5,color:#fff
+    style Analytics fill:none,stroke:#FF6B35,stroke-width:2px,stroke-dasharray: 5 5,color:#fff</div>
+<p>Each layer has a clear contract: Bronze is raw and untouched, Silver is clean and typed, Gold is business-ready and analytical.</p>
+<hr>
+<h2 id="the-bronze-layer-raw-data-with-intentional-problems">The Bronze Layer: Raw Data with Intentional Problems<a hidden class="anchor" aria-hidden="true" href="#the-bronze-layer-raw-data-with-intentional-problems">#</a></h2>
+<p>We load three CSV files into Databricks using <code>dbt seed</code>. Crucially, I&rsquo;ve designed these files with <strong>real-world data quality issues</strong> baked in — the same problems you&rsquo;d encounter in production:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Table</th>
+          <th>Quality Issues</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>raw_orders</code></td>
+          <td>Duplicate <code>order_id</code>, one null <code>order_id</code>, one negative quantity, mixed-case status (<code>SHIPPED</code> vs <code>shipped</code>)</td>
+      </tr>
+      <tr>
+          <td><code>raw_customers</code></td>
+          <td>Duplicate customer record (C003 appears twice), inconsistent country casing (<code>india</code>, <code>INDIA</code>, <code>India</code>)</td>
+      </tr>
+      <tr>
+          <td><code>raw_products</code></td>
+          <td>Inconsistent category casing (<code>Electronics</code>, <code>electronics</code>, <code>ELECTRONICS</code>)</td>
+      </tr>
+  </tbody>
+</table>
+<p>These aren&rsquo;t mistakes — they&rsquo;re the teaching material. Every transformation in the Silver layer exists to fix one of these problems.</p>
+<hr>
+<h2 id="the-silver-layer-where-the-real-work-happens">The Silver Layer: Where the Real Work Happens<a hidden class="anchor" aria-hidden="true" href="#the-silver-layer-where-the-real-work-happens">#</a></h2>
+<p>The staging models are the heart of this project. Let&rsquo;s walk through <code>stg_orders.sql</code> in detail:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> <span style="color:#66d9ef">source</span> <span style="color:#66d9ef">as</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#66d9ef">source</span>(<span style="color:#e6db74">&#39;ecommerce_bronze&#39;</span>, <span style="color:#e6db74">&#39;raw_orders&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span>
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Step 1: Remove rows with null order_id
+</span></span></span><span style="display:flex;"><span>filtered <span style="color:#66d9ef">as</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">source</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">where</span> order_id <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> <span style="color:#66d9ef">null</span>
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Step 2: Deduplicate — order O001 appears twice, keep the earliest
+</span></span></span><span style="display:flex;"><span>deduplicated <span style="color:#66d9ef">as</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> (
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span>,
+</span></span><span style="display:flex;"><span>            row_number() over (
+</span></span><span style="display:flex;"><span>                partition <span style="color:#66d9ef">by</span> order_id
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> order_date <span style="color:#66d9ef">asc</span>
+</span></span><span style="display:flex;"><span>            ) <span style="color:#66d9ef">as</span> row_num
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">from</span> filtered
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">where</span> row_num <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Step 3: Clean and standardize
+</span></span></span><span style="display:flex;"><span>cleaned <span style="color:#66d9ef">as</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>        order_id,
+</span></span><span style="display:flex;"><span>        customer_id,
+</span></span><span style="display:flex;"><span>        product_id,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">cast</span>(order_date <span style="color:#66d9ef">as</span> date)                    <span style="color:#66d9ef">as</span> order_date,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">cast</span>(quantity <span style="color:#66d9ef">as</span> int)                       <span style="color:#66d9ef">as</span> quantity,
+</span></span><span style="display:flex;"><span>        <span style="color:#960050;background-color:#1e0010">{{</span> cents_to_dollars(<span style="color:#e6db74">&#39;unit_price_cents&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span>  <span style="color:#66d9ef">as</span> unit_price,  <span style="color:#75715e">-- macro!
+</span></span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">upper</span>(<span style="color:#66d9ef">trim</span>(status))                         <span style="color:#66d9ef">as</span> status,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">lower</span>(<span style="color:#66d9ef">trim</span>(payment_method))                 <span style="color:#66d9ef">as</span> payment_method
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">from</span> deduplicated
+</span></span><span style="display:flex;"><span>),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">-- Step 4: Filter negative quantities
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">as</span> (
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> cleaned
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">where</span> quantity <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#66d9ef">final</span>
+</span></span></code></pre></div><p>Notice the pattern: each CTE handles <strong>exactly one concern</strong>. This is intentional. When a bug appears in production, you trace back through the CTEs one at a time until you find the culprit. Readable SQL is debuggable SQL.</p>
+<hr>
+<h2 id="dbt-superpower-1-the-macro">dbt Superpower #1: The Macro<a hidden class="anchor" aria-hidden="true" href="#dbt-superpower-1-the-macro">#</a></h2>
+<p>Notice <code>{{ cents_to_dollars('unit_price_cents') }}</code> in the query above. That&rsquo;s a <strong>Jinja macro</strong> — a reusable SQL function defined once and used everywhere:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span><span style="color:#f92672">%</span> macro cents_to_dollars(<span style="color:#66d9ef">column_name</span>) <span style="color:#f92672">%</span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span>    round(<span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#66d9ef">column_name</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span><span style="color:#f92672">%</span> endmacro <span style="color:#f92672">%</span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span></code></pre></div><p>Why <code>100.0</code> and not <code>100</code>? Because in SQL, dividing an integer by an integer performs <strong>integer division</strong> — <code>4999 / 100 = 49</code> (we lose the cents!). The <code>.0</code> forces float division: <code>4999 / 100.0 = 49.99</code>. If you ever need to change the rounding logic, you fix it in one place — not across every model that converts prices.</p>
+<hr>
+<h2 id="the-gold-layer-business-ready-analytics">The Gold Layer: Business-Ready Analytics<a hidden class="anchor" aria-hidden="true" href="#the-gold-layer-business-ready-analytics">#</a></h2>
+<h3 id="fct_orders--the-incremental-fact-table"><code>fct_orders</code> — The Incremental Fact Table<a hidden class="anchor" aria-hidden="true" href="#fct_orders--the-incremental-fact-table">#</a></h3>
+<p>The fact table joins all three staging models into one enriched, queryable table:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{{</span> config(materialized<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;incremental&#39;</span>, unique_key<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;order_id&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> orders    <span style="color:#66d9ef">as</span> (<span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#66d9ef">ref</span>(<span style="color:#e6db74">&#39;stg_orders&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span>),
+</span></span><span style="display:flex;"><span>     customers <span style="color:#66d9ef">as</span> (<span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#66d9ef">ref</span>(<span style="color:#e6db74">&#39;stg_customers&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span>),
+</span></span><span style="display:flex;"><span>     products  <span style="color:#66d9ef">as</span> (<span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#66d9ef">ref</span>(<span style="color:#e6db74">&#39;stg_products&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    o.order_id, o.order_date, o.quantity,
+</span></span><span style="display:flex;"><span>    o.unit_price, o.quantity <span style="color:#f92672">*</span> o.unit_price <span style="color:#66d9ef">as</span> total_amount,
+</span></span><span style="display:flex;"><span>    o.status, o.payment_method,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">c</span>.full_name <span style="color:#66d9ef">as</span> customer_name, <span style="color:#66d9ef">c</span>.country <span style="color:#66d9ef">as</span> customer_country,
+</span></span><span style="display:flex;"><span>    p.product_name, p.category <span style="color:#66d9ef">as</span> product_category, p.brand
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> orders o
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">left</span> <span style="color:#66d9ef">join</span> customers <span style="color:#66d9ef">c</span> <span style="color:#66d9ef">on</span> o.customer_id <span style="color:#f92672">=</span> <span style="color:#66d9ef">c</span>.customer_id
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">left</span> <span style="color:#66d9ef">join</span> products  p <span style="color:#66d9ef">on</span> o.product_id  <span style="color:#f92672">=</span> p.product_id
+</span></span></code></pre></div><hr>
+<h2 id="dbt-superpower-2-incremental-models">dbt Superpower #2: Incremental Models<a hidden class="anchor" aria-hidden="true" href="#dbt-superpower-2-incremental-models">#</a></h2>
+<p>The <code>fct_orders</code> model is materialized as <strong>incremental</strong> — one of dbt&rsquo;s most powerful features. Here&rsquo;s the logic that makes it work:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span><span style="color:#f92672">%</span> <span style="color:#66d9ef">if</span> is_incremental() <span style="color:#f92672">%</span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">where</span> order_date <span style="color:#f92672">&gt;</span> (<span style="color:#66d9ef">select</span> <span style="color:#66d9ef">max</span>(order_date) <span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">{{</span> this <span style="color:#960050;background-color:#1e0010">}}</span>)
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span><span style="color:#f92672">%</span> endif <span style="color:#f92672">%</span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span></code></pre></div><p><strong>Why does this matter?</strong> Imagine your company has 3 years of order history — millions of rows. Without incremental, every dbt run rebuilds the entire table from scratch. That&rsquo;s expensive, slow, and unnecessary.</p>
+<p>With <code>is_incremental()</code>:</p>
+<ul>
+<li><strong>First run:</strong> Full table build (processes all history)</li>
+<li><strong>Every subsequent run:</strong> Only processes orders newer than the latest date already in the table</li>
+</ul>
+<p>In production, this cuts a 2-hour full rebuild down to a 3-minute incremental run.</p>
+<hr>
+<h2 id="dbt-superpower-3-testing-as-code">dbt Superpower #3: Testing as Code<a hidden class="anchor" aria-hidden="true" href="#dbt-superpower-3-testing-as-code">#</a></h2>
+<p>This is where dbt changes how you think about data quality. Instead of manually checking tables, you declare your expectations as code in YAML:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">stg_orders</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">columns</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">order_id</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">tests</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#ae81ff">not_null</span>
+</span></span><span style="display:flex;"><span>        - <span style="color:#ae81ff">unique</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">status</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">tests</span>:
+</span></span><span style="display:flex;"><span>        - <span style="color:#f92672">accepted_values</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">values</span>: [<span style="color:#e6db74">&#39;DELIVERED&#39;</span>, <span style="color:#e6db74">&#39;SHIPPED&#39;</span>, <span style="color:#e6db74">&#39;CANCELLED&#39;</span>, <span style="color:#e6db74">&#39;RETURNED&#39;</span>]
+</span></span></code></pre></div><p>Run <code>dbt test</code> and dbt generates SQL for each test, executes it against your Databricks tables, and reports results:</p>
+<pre tabindex="0"><code>18 of 18 PASS ............................................................. [PASS in 12.3s]
+
+Done. PASS=18 WARN=0 ERROR=0 SKIP=0 TOTAL=18
+</code></pre><p>We also have a <strong>custom singular test</strong> for business logic that&rsquo;s too nuanced for schema tests. The rule: after staging filters, no order should have a negative quantity.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- tests/assert_no_negative_quantity.sql
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">-- If this returns ANY rows, the test FAILS.
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> order_id, quantity
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#66d9ef">ref</span>(<span style="color:#e6db74">&#39;stg_orders&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> quantity <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>
+</span></span></code></pre></div><p>These tests run in CI pipelines at real companies. If a test fails, the deployment stops — bad data never reaches analysts.</p>
+<hr>
+<h2 id="dbt-superpower-4-the-relationships-test-fk-validation">dbt Superpower #4: The <code>relationships</code> Test (FK Validation)<a hidden class="anchor" aria-hidden="true" href="#dbt-superpower-4-the-relationships-test-fk-validation">#</a></h2>
+<p>In the <code>_marts__models.yml</code>, we declare <strong>foreign key validation</strong> between tables:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">customer_id</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tests</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">relationships</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">to</span>: <span style="color:#ae81ff">ref(&#39;stg_customers&#39;)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">field</span>: <span style="color:#ae81ff">customer_id</span>
+</span></span></code></pre></div><p>dbt generates a SQL query that checks: does every <code>customer_id</code> in <code>fct_orders</code> exist in <code>stg_customers</code>? This is the equivalent of a database foreign key constraint — but running as a testable, trackable CI check.</p>
+<hr>
+<h2 id="dbt-superpower-5-auto-generated-documentation">dbt Superpower #5: Auto-Generated Documentation<a hidden class="anchor" aria-hidden="true" href="#dbt-superpower-5-auto-generated-documentation">#</a></h2>
+<h2 id="dbt-superpower-4-source-freshness-dbt-source-freshness">dbt Superpower #4: Source Freshness (<code>dbt source freshness</code>)<a hidden class="anchor" aria-hidden="true" href="#dbt-superpower-4-source-freshness-dbt-source-freshness">#</a></h2>
+<p>We declare all three Bronze tables as dbt <strong>sources</strong> with freshness thresholds:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">sources</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">ecommerce_bronze</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">freshness</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">warn_after</span>: {<span style="color:#f92672">count: 24, period</span>: <span style="color:#ae81ff">hour}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">error_after</span>: {<span style="color:#f92672">count: 48, period</span>: <span style="color:#ae81ff">hour}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">loaded_at_field</span>: <span style="color:#e6db74">&#34;current_timestamp()&#34;</span>
+</span></span></code></pre></div><p>Running <code>dbt source freshness</code> checks whether your source data has been updated within the expected window. In production pipelines, this is how data teams detect when an upstream ETL job silently fails.</p>
+<hr>
+<h2 id="dbt-superpower-5-the-auto-generated-lineage-graph">dbt Superpower #5: The Auto-Generated Lineage Graph<a hidden class="anchor" aria-hidden="true" href="#dbt-superpower-5-the-auto-generated-lineage-graph">#</a></h2>
+<p>After running <code>dbt docs generate &amp;&amp; dbt docs serve</code>, open <code>localhost:8080</code> and click the graph icon in the bottom-right. This is what you see:</p>
+<p><img alt="dbt Lineage Graph — Bronze seeds (green) flow through Silver staging into the Gold fct_orders hub (purple), which feeds all three mart tables" loading="lazy" src="/projects-code/dbt-databricks-ecommerce/analytics/screenshots/fct_orders.png"></p>
+<p>This diagram was <strong>generated automatically</strong> from your <code>ref()</code> calls in SQL. dbt reads your code, understands the dependencies, and draws this for free. You never have to maintain a data flow diagram again — it updates every time you run <code>dbt docs generate</code>.</p>
+<p>Notice <code>fct_orders</code> in the centre (highlighted purple) — it is the hub of the entire warehouse. Three sources flow into it, and three mart tables flow out of it. This is the Medallion Architecture made visible.</p>
+<hr>
+<h2 id="the-gold-layer-dimension-tables">The Gold Layer: Dimension Tables<a hidden class="anchor" aria-hidden="true" href="#the-gold-layer-dimension-tables">#</a></h2>
+<p><code>dim_customers</code> aggregates from <code>fct_orders</code> to give each customer a complete business profile:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Column</th>
+          <th>Description</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>lifetime_value</code></td>
+          <td>Total revenue across all orders</td>
+      </tr>
+      <tr>
+          <td><code>total_orders</code></td>
+          <td>How many times they&rsquo;ve ordered</td>
+      </tr>
+      <tr>
+          <td><code>first_order_date</code></td>
+          <td>Acquisition date</td>
+      </tr>
+      <tr>
+          <td><code>return_rate_pct</code></td>
+          <td>% of orders returned</td>
+      </tr>
+      <tr>
+          <td><code>avg_order_value</code></td>
+          <td>Spend per order</td>
+      </tr>
+  </tbody>
+</table>
+<p><code>dim_products</code> similarly aggregates sales metrics per product — total units sold, confirmed units (delivered only), and total revenue.</p>
+<p><code>monthly_revenue</code> is the &ldquo;executive summary&rdquo; table: one row per month with order count, unique customers, total revenue, average order value, and the <strong>top-performing category</strong> for that month — derived using a window function.</p>
+<hr>
+<h2 id="sql-analytics-in-databricks">SQL Analytics in Databricks<a hidden class="anchor" aria-hidden="true" href="#sql-analytics-in-databricks">#</a></h2>
+<p>After <code>dbt run</code>, the Gold-layer tables are live and queryable directly in the <strong>Databricks SQL Editor</strong>. No additional BI tool needed — Databricks has built-in chart visualizations.</p>
+<h3 id="revenue-by-payment-method">Revenue by Payment Method<a hidden class="anchor" aria-hidden="true" href="#revenue-by-payment-method">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span>
+</span></span><span style="display:flex;"><span>    payment_method,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">COUNT</span>(<span style="color:#66d9ef">DISTINCT</span> order_id)    <span style="color:#66d9ef">AS</span> total_orders,
+</span></span><span style="display:flex;"><span>    ROUND(<span style="color:#66d9ef">SUM</span>(total_amount), <span style="color:#ae81ff">2</span>) <span style="color:#66d9ef">AS</span> total_revenue
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> dev.ecommerce_gold.fct_orders
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> status <span style="color:#66d9ef">IN</span> (<span style="color:#e6db74">&#39;DELIVERED&#39;</span>, <span style="color:#e6db74">&#39;SHIPPED&#39;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> payment_method
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> total_revenue <span style="color:#66d9ef">DESC</span>;
+</span></span></code></pre></div><p><img alt="Revenue by Payment Method — Credit card dominates at ~$730, followed by debit card ($325) and PayPal ($245)" loading="lazy" src="/projects-code/dbt-databricks-ecommerce/analytics/screenshots/payment_method.png"></p>
+<p><strong>Business insight:</strong> Credit card customers account for over 55% of total revenue. A real business would use this to prioritise their payment gateway partnerships.</p>
+<hr>
+<h3 id="product-revenue-performance">Product Revenue Performance<a hidden class="anchor" aria-hidden="true" href="#product-revenue-performance">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> product_name, category, total_revenue, total_units_sold
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> dev.ecommerce_gold.dim_products
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> total_revenue <span style="color:#66d9ef">DESC</span>;
+</span></span></code></pre></div><p><img alt="Product Revenue — Wireless Headphones leads at ~$650 total revenue, followed by Laptop Pro 15 at ~$360" loading="lazy" src="/projects-code/dbt-databricks-ecommerce/analytics/screenshots/product_revenue.png"></p>
+<p><strong>Business insight:</strong> Wireless Headphones generates 2x the revenue of the next best product (Laptop Pro 15), despite both being Electronics. This is the kind of signal a product team would act on immediately — expand the headphones range, investigate the laptop.</p>
+<hr>
+<h3 id="customer-lifetime-value">Customer Lifetime Value<a hidden class="anchor" aria-hidden="true" href="#customer-lifetime-value">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> full_name, country, total_orders, lifetime_value
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> dev.ecommerce_gold.dim_customers
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> total_orders <span style="color:#66d9ef">IS</span> <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> lifetime_value <span style="color:#66d9ef">DESC</span>;
+</span></span></code></pre></div><p><img alt="Customer Lifetime Value — Carlos Garcia leads with ~$280 LTV, Aisha Patel close behind at ~$270" loading="lazy" src="/projects-code/dbt-databricks-ecommerce/analytics/screenshots/customer.png"></p>
+<p><strong>Business insight:</strong> The top 3 customers (Carlos Garcia, Aisha Patel, Arjun Sajeevan) each account for over $150 in lifetime value. A retention campaign targeting this cohort would protect a significant portion of revenue.</p>
+<hr>
+<h2 id="how-to-follow-along">How to Follow Along<a hidden class="anchor" aria-hidden="true" href="#how-to-follow-along">#</a></h2>
+<p>Everything you need is in the GitHub repo. Here&rsquo;s the full run sequence:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 1. Install dbt</span>
+</span></span><span style="display:flex;"><span>pip install dbt-databricks
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. Copy the profile template and fill in your credentials</span>
+</span></span><span style="display:flex;"><span>cp profiles.yml.example ~/.dbt/profiles.yml
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. Install packages</span>
+</span></span><span style="display:flex;"><span>dbt deps
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. Test your connection</span>
+</span></span><span style="display:flex;"><span>dbt debug
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 5. Load raw data into Databricks</span>
+</span></span><span style="display:flex;"><span>dbt seed
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 6. Build the warehouse</span>
+</span></span><span style="display:flex;"><span>dbt run
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 7. Run all 18 tests</span>
+</span></span><span style="display:flex;"><span>dbt test
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 8. Generate and explore the docs + lineage graph</span>
+</span></span><span style="display:flex;"><span>dbt docs generate <span style="color:#f92672">&amp;&amp;</span> dbt docs serve
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 9. Check source freshness</span>
+</span></span><span style="display:flex;"><span>dbt source freshness
+</span></span></code></pre></div><p>Then open the Databricks SQL Editor and run the queries in <code>analytics/</code> to build your charts.</p>
+<hr>
+<h2 id="engineering-decisions">Engineering Decisions<a hidden class="anchor" aria-hidden="true" href="#engineering-decisions">#</a></h2>
+<p><strong>Why views for staging, tables for marts?</strong><br>
+Staging models are cheap to recompute — they&rsquo;re just SQL on top of seeds. Building them as views means they always reflect the latest raw data without using Databricks compute. Marts are queried frequently by dashboards, so they need to be pre-computed tables for fast response times.</p>
+<p><strong>Why left join (not inner join) in <code>fct_orders</code>?</strong><br>
+An inner join would silently drop orders if a <code>customer_id</code> or <code>product_id</code> doesn&rsquo;t match — a data loss bug that&rsquo;s hard to detect. Left join preserves all orders and leaves customer/product columns null if there&rsquo;s no match. The <code>relationships</code> test then catches these orphaned records explicitly.</p>
+<p><strong>Why is the monthly_revenue model not incremental?</strong><br>
+Monthly aggregates need to be recalculated whenever historical data changes (late-arriving orders, status updates). An incremental strategy would be wrong here — we need a full rebuild to get accurate monthly totals. For a 3-month dataset, a full rebuild takes milliseconds anyway.</p>
+<hr>
+<h2 id="key-takeaways">Key Takeaways<a hidden class="anchor" aria-hidden="true" href="#key-takeaways">#</a></h2>
+<ol>
+<li>
+<p><strong>dbt makes SQL a first-class engineering artifact.</strong> Version-controlled, tested, documented SQL is fundamentally different from ad-hoc queries.</p>
+</li>
+<li>
+<p><strong>The Medallion Architecture is not just a pattern — it&rsquo;s a contract.</strong> Every layer has a specific responsibility. Bronze is raw, Silver is clean, Gold is business-ready.</p>
+</li>
+<li>
+<p><strong>Incremental models are the difference between a pipeline and a production pipeline.</strong> Always ask: &ldquo;Do I need to reprocess historical data on every run?&rdquo;</p>
+</li>
+<li>
+<p><strong>Test your data like you test your code.</strong> <code>dbt test</code> in CI means data quality failures block deployments — exactly like unit test failures.</p>
+</li>
+<li>
+<p><strong>Documentation is a deliverable, not an afterthought.</strong> The <code>dbt docs</code> site is the gift you give to every analyst who comes after you.</p>
+</li>
+</ol>
+<hr>
+<h2 id="project-resources">Project Resources<a hidden class="anchor" aria-hidden="true" href="#project-resources">#</a></h2>
+<p>Ready to build this yourself? Everything is in the repo — seeds, models, macros, tests, and analytics SQL files.</p>
+<p>👉 <strong><a href="https://github.com/arjun-sajeevan/arjunsajeevan.github.io/tree/main/projects-code/dbt-databricks-ecommerce">View the Full Project on GitHub</a></strong></p>
+<hr>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://arjunsajeevan.com/tags/data-engineering/">Data Engineering</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/dbt/">Dbt</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/databricks/">Databricks</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/sql/">SQL</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/medallion-architecture/">Medallion Architecture</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/delta-lake/">Delta Lake</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/intermediate/">Intermediate</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://arjunsajeevan.com/">Arjun Sajeevan</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
