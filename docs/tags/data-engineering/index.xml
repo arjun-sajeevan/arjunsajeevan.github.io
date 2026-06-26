@@ -16,6 +16,13 @@
       <description>A complete, end-to-end analytics engineering project — transforming raw, messy e-commerce data into a clean, tested, and documented warehouse using dbt and Databricks Community Edition.</description>
     </item>
     <item>
+      <title>What is dbt and Why Do Companies Use It?</title>
+      <link>https://arjunsajeevan.com/posts/what-is-dbt/</link>
+      <pubDate>Fri, 26 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://arjunsajeevan.com/posts/what-is-dbt/</guid>
+      <description>A clear explanation of dbt (data build tool) — what it does, why it has become a standard in modern data engineering, and what makes it genuinely different from writing raw SQL.</description>
+    </item>
+    <item>
       <title>Data Engineering Foundations for Beginners: Your First Data Pipeline</title>
       <link>https://arjunsajeevan.com/projects/sales-ingestion-cleansing/</link>
       <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>

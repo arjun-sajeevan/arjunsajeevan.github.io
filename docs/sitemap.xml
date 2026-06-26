@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://arjunsajeevan.com/tags/analytics-engineering/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://arjunsajeevan.com/projects/dbt-databricks-ecommerce/</loc>
     <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
@@ -9,6 +12,9 @@
     <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/data-engineering/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/tags/data-transformation/</loc>
     <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/databricks/</loc>
@@ -26,6 +32,9 @@
     <loc>https://arjunsajeevan.com/tags/medallion-architecture/</loc>
     <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://arjunsajeevan.com/posts/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://arjunsajeevan.com/projects/</loc>
     <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
@@ -33,6 +42,9 @@
     <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/</loc>
+    <lastmod>2026-06-26T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://arjunsajeevan.com/posts/what-is-dbt/</loc>
     <lastmod>2026-06-26T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/beginner/</loc>
@@ -57,9 +69,6 @@
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/performance/</loc>
-    <lastmod>2026-03-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://arjunsajeevan.com/posts/</loc>
     <lastmod>2026-03-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://arjunsajeevan.com/tags/teradata/</loc>

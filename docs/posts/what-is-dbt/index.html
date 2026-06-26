@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>What is dbt and Why Do Companies Use It? | Arjun Sajeevan</title>
+<meta name="keywords" content="dbt, Data Engineering, SQL, Analytics Engineering, Data Transformation">
+<meta name="description" content="A clear explanation of dbt (data build tool) — what it does, why it has become a standard in modern data engineering, and what makes it genuinely different from writing raw SQL.">
+<meta name="author" content="Arjun Sajeevan">
+<link rel="canonical" href="https://arjunsajeevan.com/posts/what-is-dbt/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6ff46447b1fa3f8a5cc0bcae48088decc3ae37f5fbc99406a3aefc3bf0e6044a.css" integrity="sha256-b/RkR7H6P4pcwLyuSAiN7MOuN/X7yZQGo678O/DmBEo=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://arjunsajeevan.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://arjunsajeevan.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://arjunsajeevan.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://arjunsajeevan.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://arjunsajeevan.com/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://arjunsajeevan.com/posts/what-is-dbt/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://arjunsajeevan.com/posts/what-is-dbt/">
+  <meta property="og:site_name" content="Arjun Sajeevan">
+  <meta property="og:title" content="What is dbt and Why Do Companies Use It?">
+  <meta property="og:description" content="A clear explanation of dbt (data build tool) — what it does, why it has become a standard in modern data engineering, and what makes it genuinely different from writing raw SQL.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-06-26T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-06-26T00:00:00+00:00">
+    <meta property="article:tag" content="Dbt">
+    <meta property="article:tag" content="Data Engineering">
+    <meta property="article:tag" content="SQL">
+    <meta property="article:tag" content="Analytics Engineering">
+    <meta property="article:tag" content="Data Transformation">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="What is dbt and Why Do Companies Use It?">
+  <meta name="twitter:description" content="A clear explanation of dbt (data build tool) — what it does, why it has become a standard in modern data engineering, and what makes it genuinely different from writing raw SQL.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://arjunsajeevan.com/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "What is dbt and Why Do Companies Use It?",
+      "item": "https://arjunsajeevan.com/posts/what-is-dbt/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "What is dbt and Why Do Companies Use It?",
+  "name": "What is dbt and Why Do Companies Use It?",
+  "description": "A clear explanation of dbt (data build tool) — what it does, why it has become a standard in modern data engineering, and what makes it genuinely different from writing raw SQL.",
+  "keywords": [
+    "dbt", "Data Engineering", "SQL", "Analytics Engineering", "Data Transformation"
+  ],
+  "articleBody": "If you have spent any time in data engineering recently, you have almost certainly heard of dbt. It is on almost every data job description, it is the centrepiece of the modern data stack, and yet a lot of people still cannot give a clear answer to the simple question: “What does dbt actually do?”\nThis post is that clear answer.\nThe Problem dbt Solves Before dbt, here is how data transformation typically worked:\nA data team had raw data sitting in a data warehouse — messy, unvalidated, inconsistently formatted. They needed to turn it into clean, reliable tables that analysts and dashboards could query.\nThe solution was usually a collection of SQL scripts. Someone would write transform_orders.sql, clean_customers.sql, build_revenue_summary.sql, and so on. These scripts would be run in a specific order by a cron job, an orchestration tool, or sometimes manually.\nThis approach works — until it breaks. And it almost always breaks, because:\nNo one knows what order to run the scripts in. When revenue_summary.sql depends on clean_customers.sql, which depends on raw_orders, you have to track dependencies in your head or in a document nobody reads. There is no testing. If a script produces wrong results, no one finds out until an analyst notices the numbers are wrong in a dashboard — sometimes weeks later. There is no documentation. What does user_flag_3 mean? Nobody knows. The person who wrote it left. Nothing is reusable. The same date_format() logic is duplicated across fifteen files, and when the business logic changes, you have to find and update every one of them. dbt was built to fix all of this.\nWhat dbt Is dbt stands for data build tool. It is an open-source framework that brings software engineering best practices — version control, testing, modularity, documentation — to SQL-based data transformation.\nThe core idea is simple: dbt lets you write SQL SELECT statements, and it handles the rest.\nYou write this:\n-- models/marts/revenue_summary.sql select customer_id, sum(total_amount) as lifetime_value from {{ ref('stg_orders') }} where status = 'DELIVERED' group by customer_id dbt turns it into a table or view in your data warehouse. It figures out what order to build everything, handles the CREATE TABLE or CREATE VIEW statements, and tracks every dependency.\nThe {{ ref('stg_orders') }} call is the key. Instead of hard-coding a table name, you tell dbt to reference another model. dbt reads all those references, builds a dependency graph, and runs everything in the correct order — automatically.\nThe Five Things That Make dbt Different 1. Automatic Dependency Management When you use ref() in dbt, it builds a Directed Acyclic Graph (DAG) of your entire warehouse. It knows that fct_orders depends on stg_orders, which depends on the raw source. It builds them in that order, every single time, without you thinking about it.\nThis is what the graph looks like when you run dbt docs serve:\nBronze (raw) → Silver (staging) → Gold (marts)\nYou can add a new model, reference it from another, and dbt automatically slots it into the right position in the build order.\n2. Built-in Testing dbt has a testing framework built in. You define tests in YAML files alongside your models:\n- name: order_id tests: - not_null - unique - name: status tests: - accepted_values: values: ['DELIVERED', 'SHIPPED', 'CANCELLED'] Run dbt test and dbt queries your warehouse to verify every single one of those rules. If any test fails, you know immediately — before bad data reaches a dashboard or a business decision.\nYou can also write custom tests — any SQL query that returns zero rows when everything is correct.\n3. Auto-Generated Documentation You describe your models and columns in YAML. dbt turns those descriptions into a full documentation website — searchable, browsable, and always up to date because it is generated from the same code your warehouse is built from.\nThe documentation site also includes the interactive lineage graph — a visual map of every model and how they connect to each other. In one click, you can see every table that depends on a source, or every upstream dependency of a model.\nThis is something most data teams have never had before.\n4. Jinja Macros (Reusable SQL Logic) dbt uses Jinja templating, which means you can write reusable functions in SQL. Instead of copying the same logic across ten models, you write it once as a macro:\n-- macros/cents_to_dollars.sql {% macro cents_to_dollars(column_name) %} round({{ column_name }} / 100.0, 2) {% endmacro %} Then use it anywhere:\n{{ cents_to_dollars('unit_price_cents') }} as unit_price If the logic ever changes, you update it in one place.\n5. Source Freshness Monitoring dbt lets you declare your raw data sources and set freshness thresholds:\nsources: - name: raw_orders freshness: warn_after: {count: 24, period: hour} error_after: {count: 48, period: hour} Running dbt source freshness checks whether those tables have been updated within the expected window. This is how data teams detect when an upstream data pipeline silently fails — before anyone notices the dashboards are stale.\nWhy Companies Use dbt dbt has become the standard transformation layer in the modern data stack because it solves problems that previously had no clean solution.\nIt makes SQL maintainable. Large warehouses with hundreds of tables become manageable because every model is a separate file, version-controlled in Git, with a clear name and purpose.\nIt creates accountability. Because everything is in Git, every change has an author, a date, and a commit message. You can see exactly when a business rule changed and who changed it.\nIt closes the gap between analysts and engineers. Analysts who know SQL can write dbt models. Engineers can review them in pull requests. The same workflow that software teams use for application code now works for data transformation.\nIt enables CI/CD for data. Because dbt projects are just files in a Git repository, you can run automated tests on every pull request. Bad SQL that would break a dashboard never makes it to production.\nIt scales with the team. A solo analyst can use dbt on a laptop. A team of fifty engineers at a large company can use the same tool on the same codebase — with the same conventions, the same documentation, the same tests.\nWhere dbt Fits in the Stack dbt is a transformation tool. It does not ingest data — it works on data that is already in your warehouse. The typical modern data stack looks like this:\nLayer Tool examples What it does Ingestion Fivetran, Airbyte, Kafka Moves raw data into the warehouse Storage Snowflake, Databricks, BigQuery Stores all the data Transformation dbt Cleans, tests, and structures the data Visualisation Looker, Tableau, Power BI Builds dashboards on the clean data dbt owns the transformation layer completely.\nThe Two Versions of dbt dbt Core is the open-source command-line tool. It is free and runs locally or in any environment you choose.\ndbt Cloud is the managed platform — a browser-based IDE, a scheduler, CI/CD integration, and hosted documentation. It is a paid product aimed at teams who want those features without managing infrastructure.\nFor learning and for most projects, dbt Core is everything you need.\nThe Bottom Line dbt is not a revolutionary idea. Writing SQL against a warehouse and building tables has always been possible. What dbt adds is structure, reliability, and professionalism to a process that was previously held together by convention and discipline alone.\nIt is the difference between a pile of SQL scripts in a shared folder and an engineering-grade data warehouse with documented tables, tested data, tracked changes, and a visual map of how everything connects.\nThat is why companies use it. That is why it is worth learning.\nIf you want to see dbt in action end-to-end — including a real Medallion Architecture built on Databricks with 50 passing tests and live analytics charts — check out the dbt + Databricks E-Commerce Warehouse project on this site.\n",
+  "wordCount" : "1311",
+  "inLanguage": "en",
+  "datePublished": "2026-06-26T00:00:00Z",
+  "dateModified": "2026-06-26T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Arjun Sajeevan"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://arjunsajeevan.com/posts/what-is-dbt/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Arjun Sajeevan",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://arjunsajeevan.com/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="header-nav">
+        <div class="logo">
+            <a href="https://arjunsajeevan.com/" accesskey="h" title="Arjun Sajeevan (Alt + H)">Arjun Sajeevan</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" class="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg class="moon" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg class="sun" xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu" class="menu">
+            <li>
+                <a href="https://arjunsajeevan.com/projects/" title="Projects">
+                    <span>Projects</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://arjunsajeevan.com/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://arjunsajeevan.com/contact/" title="Contact">
+                    <span>Contact</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title entry-hint-parent">
+      What is dbt and Why Do Companies Use It?
+    </h1>
+    <div class="post-description">
+      A clear explanation of dbt (data build tool) — what it does, why it has become a standard in modern data engineering, and what makes it genuinely different from writing raw SQL.
+    </div>
+    <div class="post-meta">
+
+<span title='2026-06-26 00:00:00 +0000 UTC'>June 26, 2026</span>&nbsp;·&nbsp;<span>Arjun Sajeevan</span>
+
+</div>
+  </header> 
+  <div class="post-content md-content"><p>If you have spent any time in data engineering recently, you have almost certainly heard of <strong>dbt</strong>. It is on almost every data job description, it is the centrepiece of the modern data stack, and yet a lot of people still cannot give a clear answer to the simple question: <em>&ldquo;What does dbt actually do?&rdquo;</em></p>
+<p>This post is that clear answer.</p>
+<hr>
+<h3 id="the-problem-dbt-solves">The Problem dbt Solves<a hidden class="anchor" aria-hidden="true" href="#the-problem-dbt-solves">#</a></h3>
+<p>Before dbt, here is how data transformation typically worked:</p>
+<p>A data team had raw data sitting in a data warehouse — messy, unvalidated, inconsistently formatted. They needed to turn it into clean, reliable tables that analysts and dashboards could query.</p>
+<p>The solution was usually a collection of SQL scripts. Someone would write <code>transform_orders.sql</code>, <code>clean_customers.sql</code>, <code>build_revenue_summary.sql</code>, and so on. These scripts would be run in a specific order by a cron job, an orchestration tool, or sometimes manually.</p>
+<p>This approach works — until it breaks. And it almost always breaks, because:</p>
+<ul>
+<li><strong>No one knows what order to run the scripts in.</strong> When <code>revenue_summary.sql</code> depends on <code>clean_customers.sql</code>, which depends on <code>raw_orders</code>, you have to track dependencies in your head or in a document nobody reads.</li>
+<li><strong>There is no testing.</strong> If a script produces wrong results, no one finds out until an analyst notices the numbers are wrong in a dashboard — sometimes weeks later.</li>
+<li><strong>There is no documentation.</strong> What does <code>user_flag_3</code> mean? Nobody knows. The person who wrote it left.</li>
+<li><strong>Nothing is reusable.</strong> The same <code>date_format()</code> logic is duplicated across fifteen files, and when the business logic changes, you have to find and update every one of them.</li>
+</ul>
+<p><strong>dbt was built to fix all of this.</strong></p>
+<hr>
+<h3 id="what-dbt-is">What dbt Is<a hidden class="anchor" aria-hidden="true" href="#what-dbt-is">#</a></h3>
+<p>dbt stands for <strong>data build tool</strong>. It is an open-source framework that brings software engineering best practices — version control, testing, modularity, documentation — to SQL-based data transformation.</p>
+<p>The core idea is simple: <strong>dbt lets you write SQL <code>SELECT</code> statements, and it handles the rest.</strong></p>
+<p>You write this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- models/marts/revenue_summary.sql
+</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span>
+</span></span><span style="display:flex;"><span>    customer_id,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">sum</span>(total_amount) <span style="color:#66d9ef">as</span> lifetime_value
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">from</span> <span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#66d9ef">ref</span>(<span style="color:#e6db74">&#39;stg_orders&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">where</span> status <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;DELIVERED&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> customer_id
+</span></span></code></pre></div><p>dbt turns it into a table or view in your data warehouse. It figures out what order to build everything, handles the <code>CREATE TABLE</code> or <code>CREATE VIEW</code> statements, and tracks every dependency.</p>
+<p>The <code>{{ ref('stg_orders') }}</code> call is the key. Instead of hard-coding a table name, you tell dbt to reference another model. dbt reads all those references, builds a dependency graph, and runs everything in the correct order — automatically.</p>
+<hr>
+<h3 id="the-five-things-that-make-dbt-different">The Five Things That Make dbt Different<a hidden class="anchor" aria-hidden="true" href="#the-five-things-that-make-dbt-different">#</a></h3>
+<h4 id="1-automatic-dependency-management">1. Automatic Dependency Management<a hidden class="anchor" aria-hidden="true" href="#1-automatic-dependency-management">#</a></h4>
+<p>When you use <code>ref()</code> in dbt, it builds a <strong>Directed Acyclic Graph (DAG)</strong> of your entire warehouse. It knows that <code>fct_orders</code> depends on <code>stg_orders</code>, which depends on the raw source. It builds them in that order, every single time, without you thinking about it.</p>
+<p>This is what the graph looks like when you run <code>dbt docs serve</code>:</p>
+<blockquote>
+<p><strong>Bronze (raw)</strong> → <strong>Silver (staging)</strong> → <strong>Gold (marts)</strong></p>
+</blockquote>
+<p>You can add a new model, reference it from another, and dbt automatically slots it into the right position in the build order.</p>
+<h4 id="2-built-in-testing">2. Built-in Testing<a hidden class="anchor" aria-hidden="true" href="#2-built-in-testing">#</a></h4>
+<p>dbt has a testing framework built in. You define tests in YAML files alongside your models:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">order_id</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tests</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">not_null</span>
+</span></span><span style="display:flex;"><span>    - <span style="color:#ae81ff">unique</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>- <span style="color:#f92672">name</span>: <span style="color:#ae81ff">status</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">tests</span>:
+</span></span><span style="display:flex;"><span>    - <span style="color:#f92672">accepted_values</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">values</span>: [<span style="color:#e6db74">&#39;DELIVERED&#39;</span>, <span style="color:#e6db74">&#39;SHIPPED&#39;</span>, <span style="color:#e6db74">&#39;CANCELLED&#39;</span>]
+</span></span></code></pre></div><p>Run <code>dbt test</code> and dbt queries your warehouse to verify every single one of those rules. If any test fails, you know immediately — before bad data reaches a dashboard or a business decision.</p>
+<p>You can also write <strong>custom tests</strong> — any SQL query that returns zero rows when everything is correct.</p>
+<h4 id="3-auto-generated-documentation">3. Auto-Generated Documentation<a hidden class="anchor" aria-hidden="true" href="#3-auto-generated-documentation">#</a></h4>
+<p>You describe your models and columns in YAML. dbt turns those descriptions into a full documentation website — searchable, browsable, and always up to date because it is generated from the same code your warehouse is built from.</p>
+<p>The documentation site also includes the <strong>interactive lineage graph</strong> — a visual map of every model and how they connect to each other. In one click, you can see every table that depends on a source, or every upstream dependency of a model.</p>
+<p>This is something most data teams have never had before.</p>
+<h4 id="4-jinja-macros-reusable-sql-logic">4. Jinja Macros (Reusable SQL Logic)<a hidden class="anchor" aria-hidden="true" href="#4-jinja-macros-reusable-sql-logic">#</a></h4>
+<p>dbt uses Jinja templating, which means you can write reusable functions in SQL. Instead of copying the same logic across ten models, you write it once as a macro:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#75715e">-- macros/cents_to_dollars.sql
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span><span style="color:#f92672">%</span> macro cents_to_dollars(<span style="color:#66d9ef">column_name</span>) <span style="color:#f92672">%</span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span>    round(<span style="color:#960050;background-color:#1e0010">{{</span> <span style="color:#66d9ef">column_name</span> <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">100</span>.<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{</span><span style="color:#f92672">%</span> endmacro <span style="color:#f92672">%</span><span style="color:#960050;background-color:#1e0010">}</span>
+</span></span></code></pre></div><p>Then use it anywhere:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">{{</span> cents_to_dollars(<span style="color:#e6db74">&#39;unit_price_cents&#39;</span>) <span style="color:#960050;background-color:#1e0010">}}</span> <span style="color:#66d9ef">as</span> unit_price
+</span></span></code></pre></div><p>If the logic ever changes, you update it in one place.</p>
+<h4 id="5-source-freshness-monitoring">5. Source Freshness Monitoring<a hidden class="anchor" aria-hidden="true" href="#5-source-freshness-monitoring">#</a></h4>
+<p>dbt lets you declare your raw data sources and set freshness thresholds:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">sources</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">name</span>: <span style="color:#ae81ff">raw_orders</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">freshness</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">warn_after</span>: {<span style="color:#f92672">count: 24, period</span>: <span style="color:#ae81ff">hour}</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">error_after</span>: {<span style="color:#f92672">count: 48, period</span>: <span style="color:#ae81ff">hour}</span>
+</span></span></code></pre></div><p>Running <code>dbt source freshness</code> checks whether those tables have been updated within the expected window. This is how data teams detect when an upstream data pipeline silently fails — before anyone notices the dashboards are stale.</p>
+<hr>
+<h3 id="why-companies-use-dbt">Why Companies Use dbt<a hidden class="anchor" aria-hidden="true" href="#why-companies-use-dbt">#</a></h3>
+<p>dbt has become the standard transformation layer in the modern data stack because it solves problems that previously had no clean solution.</p>
+<p><strong>It makes SQL maintainable.</strong> Large warehouses with hundreds of tables become manageable because every model is a separate file, version-controlled in Git, with a clear name and purpose.</p>
+<p><strong>It creates accountability.</strong> Because everything is in Git, every change has an author, a date, and a commit message. You can see exactly when a business rule changed and who changed it.</p>
+<p><strong>It closes the gap between analysts and engineers.</strong> Analysts who know SQL can write dbt models. Engineers can review them in pull requests. The same workflow that software teams use for application code now works for data transformation.</p>
+<p><strong>It enables CI/CD for data.</strong> Because dbt projects are just files in a Git repository, you can run automated tests on every pull request. Bad SQL that would break a dashboard never makes it to production.</p>
+<p><strong>It scales with the team.</strong> A solo analyst can use dbt on a laptop. A team of fifty engineers at a large company can use the same tool on the same codebase — with the same conventions, the same documentation, the same tests.</p>
+<hr>
+<h3 id="where-dbt-fits-in-the-stack">Where dbt Fits in the Stack<a hidden class="anchor" aria-hidden="true" href="#where-dbt-fits-in-the-stack">#</a></h3>
+<p>dbt is a <strong>transformation</strong> tool. It does not ingest data — it works on data that is already in your warehouse. The typical modern data stack looks like this:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Layer</th>
+          <th>Tool examples</th>
+          <th>What it does</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Ingestion</td>
+          <td>Fivetran, Airbyte, Kafka</td>
+          <td>Moves raw data into the warehouse</td>
+      </tr>
+      <tr>
+          <td>Storage</td>
+          <td>Snowflake, Databricks, BigQuery</td>
+          <td>Stores all the data</td>
+      </tr>
+      <tr>
+          <td><strong>Transformation</strong></td>
+          <td><strong>dbt</strong></td>
+          <td><strong>Cleans, tests, and structures the data</strong></td>
+      </tr>
+      <tr>
+          <td>Visualisation</td>
+          <td>Looker, Tableau, Power BI</td>
+          <td>Builds dashboards on the clean data</td>
+      </tr>
+  </tbody>
+</table>
+<p>dbt owns the transformation layer completely.</p>
+<hr>
+<h3 id="the-two-versions-of-dbt">The Two Versions of dbt<a hidden class="anchor" aria-hidden="true" href="#the-two-versions-of-dbt">#</a></h3>
+<p><strong>dbt Core</strong> is the open-source command-line tool. It is free and runs locally or in any environment you choose.</p>
+<p><strong>dbt Cloud</strong> is the managed platform — a browser-based IDE, a scheduler, CI/CD integration, and hosted documentation. It is a paid product aimed at teams who want those features without managing infrastructure.</p>
+<p>For learning and for most projects, dbt Core is everything you need.</p>
+<hr>
+<h3 id="the-bottom-line">The Bottom Line<a hidden class="anchor" aria-hidden="true" href="#the-bottom-line">#</a></h3>
+<p>dbt is not a revolutionary idea. Writing SQL against a warehouse and building tables has always been possible. What dbt adds is <strong>structure, reliability, and professionalism</strong> to a process that was previously held together by convention and discipline alone.</p>
+<p>It is the difference between a pile of SQL scripts in a shared folder and an engineering-grade data warehouse with documented tables, tested data, tracked changes, and a visual map of how everything connects.</p>
+<p>That is why companies use it. That is why it is worth learning.</p>
+<hr>
+<p><em>If you want to see dbt in action end-to-end — including a real Medallion Architecture built on Databricks with 50 passing tests and live analytics charts — check out the <a href="/projects/dbt-databricks-ecommerce/">dbt + Databricks E-Commerce Warehouse</a> project on this site.</em></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://arjunsajeevan.com/tags/dbt/">Dbt</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/data-engineering/">Data Engineering</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/sql/">SQL</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/analytics-engineering/">Analytics Engineering</a></li>
+      <li><a href="https://arjunsajeevan.com/tags/data-transformation/">Data Transformation</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://arjunsajeevan.com/">Arjun Sajeevan</a></span> · 
+
+    
+    
+    <span>
+        Powered by
+        <a href="https://gohugo.io/?utm_source=papermod" rel="noopener" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" id="top-link" class="top-link hidden" aria-label="go to top" title="Go to Top (Alt + G)" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevrons-up">
+        <polyline points="17 11 12 6 7 11"></polyline>
+        <polyline points="17 18 12 13 7 18"></polyline>
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var toplink = document.getElementById("top-link");
+    window.onscroll = function () {
+        const scrollThreshold = window.innerHeight;
+        if (document.body.scrollTop > scrollThreshold || document.documentElement.scrollTop > scrollThreshold) {
+            toplink.classList.remove("hidden");
+        } else {
+            toplink.classList.add("hidden");
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+</body>
+
+</html>
