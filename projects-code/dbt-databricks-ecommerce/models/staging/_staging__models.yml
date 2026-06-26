@@ -1,0 +1,131 @@
+version: 2
+
+models:
+  - name: stg_orders
+    description: >
+      Cleaned and standardized order transactions from the Bronze layer.
+      Null order_ids have been removed, duplicates deduplicated, negative
+      quantities filtered out, status values uppercased, and unit prices
+      converted from cents to dollars.
+    columns:
+      - name: order_id
+        description: Unique order identifier. Nulls and duplicates removed from raw source.
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: Foreign key to stg_customers.
+        tests:
+          - not_null
+
+      - name: product_id
+        description: Foreign key to stg_products.
+        tests:
+          - not_null
+
+      - name: order_date
+        description: Date the order was placed (date type).
+        tests:
+          - not_null
+
+      - name: quantity
+        description: Number of units ordered. Always positive after staging filter.
+        tests:
+          - not_null
+
+      - name: unit_price
+        description: Unit price in dollars (converted from cents using cents_to_dollars macro).
+        tests:
+          - not_null
+
+      - name: status
+        description: Normalized order status in uppercase.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['DELIVERED', 'SHIPPED', 'CANCELLED', 'RETURNED']
+              config:
+                severity: error
+
+      - name: payment_method
+        description: Payment method in lowercase.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['credit_card', 'debit_card', 'paypal']
+              config:
+                severity: error
+
+  - name: stg_customers
+    description: >
+      Cleaned and deduplicated customer records from the Bronze layer.
+      Duplicate customer_ids removed (earliest signup kept), country casing
+      standardized with initcap(), whitespace trimmed from names.
+    columns:
+      - name: customer_id
+        description: Unique customer identifier. Deduplicated from raw source.
+        tests:
+          - not_null
+          - unique
+
+      - name: first_name
+        description: Customer first name, whitespace trimmed.
+        tests:
+          - not_null
+
+      - name: last_name
+        description: Customer last name, whitespace trimmed.
+        tests:
+          - not_null
+
+      - name: full_name
+        description: Derived column combining first_name and last_name.
+        tests:
+          - not_null
+
+      - name: email
+        description: Customer email address in lowercase.
+        tests:
+          - not_null
+          - unique
+
+      - name: signup_date
+        description: Date customer registered (date type).
+        tests:
+          - not_null
+
+      - name: country
+        description: Country name in Title Case (standardized with initcap).
+        tests:
+          - not_null
+
+  - name: stg_products
+    description: >
+      Cleaned product catalog from the Bronze layer. Category casing
+      standardized to Title Case, whitespace trimmed from product_name and brand.
+    columns:
+      - name: product_id
+        description: Unique product identifier.
+        tests:
+          - not_null
+          - unique
+
+      - name: product_name
+        description: Product display name, whitespace trimmed.
+        tests:
+          - not_null
+
+      - name: category
+        description: Product category in Title Case (Electronics, Accessories).
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Electronics', 'Accessories']
+              config:
+                severity: error
+
+      - name: brand
+        description: Product brand name.
+        tests:
+          - not_null

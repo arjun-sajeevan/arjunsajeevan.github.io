@@ -1,0 +1,12 @@
+customer_id,first_name,last_name,email,signup_date,country
+C001,Arjun,Sajeevan,arjun.s@email.com,2023-06-01,India
+C002,Priya,Nair,priya.n@email.com,2023-07-15,india
+C003,Mohammed,Ali,mohammed.a@email.com,2023-08-20,UAE
+C003,Mohammed,Ali,mohammed.a@email.com,2023-08-20,UAE
+C004,Sarah,Johnson,sarah.j@email.com,2023-09-10,USA
+C005,  Lena  ,Müller,lena.m@email.com,2023-10-05,Germany
+C006,Ravi,Kumar,ravi.k@email.com,2023-11-12,INDIA
+C007,Emma,Wilson,emma.w@email.com,2023-12-01,UK
+C008,Carlos,Garcia,carlos.g@email.com,2024-01-08,Spain
+C009,Aisha,Patel,aisha.p@email.com,2024-01-20,India
+C010,James,Lee,james.l@email.com,2024-02-03,USA

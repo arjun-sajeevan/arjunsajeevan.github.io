@@ -1,0 +1,10 @@
+# dbt compiled artifacts
+target/
+dbt_packages/
+logs/
+
+# NEVER commit your real profiles.yml — it contains your personal access token
+profiles.yml
+
+# macOS
+.DS_Store

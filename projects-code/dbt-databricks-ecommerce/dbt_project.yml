@@ -1,0 +1,44 @@
+name: ecommerce_analytics
+version: '1.0.0'
+config-version: 2
+
+# This profile name must match a profile in ~/.dbt/profiles.yml
+profile: ecommerce_databricks
+
+# Paths where dbt looks for your project files
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+macro-paths: ["macros"]
+analysis-paths: ["analyses"]
+
+# Files/directories to ignore when dbt compiles
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Seed configuration
+# Seeds are loaded into the ecommerce_bronze schema in hive_metastore
+seeds:
+  ecommerce_analytics:
+    +catalog: dev
+    +schema: ecommerce_bronze
+    +quote_columns: false
+
+# Model materialization strategy
+# - Staging (Silver): views — cheap to run, always reflect latest seed data
+# - Marts (Gold): tables — materialized for query performance
+models:
+  ecommerce_analytics:
+    staging:
+      +materialized: view
+      +catalog: dev
+      +schema: ecommerce_silver
+
+    marts:
+      +materialized: table
+      +catalog: dev
+      +schema: ecommerce_gold
+      # Override fct_orders specifically to incremental
+      fct_orders:
+        +materialized: incremental

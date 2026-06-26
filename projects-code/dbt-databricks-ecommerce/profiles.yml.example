@@ -1,0 +1,41 @@
+# ============================================================
+# profiles.yml — Databricks Community Edition Connection
+# ============================================================
+#
+# INSTRUCTIONS:
+#   1. Copy this file to ~/.dbt/profiles.yml  (NOT inside the project folder)
+#   2. Replace all <PLACEHOLDER> values with your own Databricks details
+#   3. Find your HTTP Path in Databricks:
+#      Compute → Your Cluster → Advanced Options → JDBC/ODBC tab
+#   4. Generate a Personal Access Token in Databricks:
+#      Settings → Developer → Access Tokens → Generate New Token
+#
+# ============================================================
+
+ecommerce_databricks:
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+
+      # Your Databricks Community Edition host
+      # Example: adb-1234567890123456.7.azuredatabricks.net
+      host: <YOUR_DATABRICKS_HOST>
+
+      # HTTP path to your running cluster
+      # Example: /sql/1.0/warehouses/abcdef1234567890
+      # OR for a regular cluster: /sql/protocolv1/o/0123456789/0123-456789-abcdef
+      http_path: <YOUR_CLUSTER_HTTP_PATH>
+
+      # Your personal access token (keep this secret — never commit to git!)
+      token: <YOUR_PERSONAL_ACCESS_TOKEN>
+
+      # Catalog (Community Edition uses hive_metastore)
+      catalog: hive_metastore
+
+      # Default schema — dbt will create ecommerce_bronze, ecommerce_silver,
+      # ecommerce_gold schemas automatically based on dbt_project.yml config
+      schema: ecommerce_silver
+
+      # Number of threads for parallel model execution
+      threads: 4
