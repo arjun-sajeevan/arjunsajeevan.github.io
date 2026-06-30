@@ -18,7 +18,7 @@ theme = 'PaperMod'
 
     [params.profileMode]
         enabled = true
-        title = "<span style='font-size: 3.0rem; font-weight: 700;'>Structuring the Absurd</span>"
+        title = "<span style='font-size: 3.0rem; font-weight: 700; letter-spacing: 0.05em;'>ARJUN SAJEEVAN</span>"
         subtitle = """
 <div style="text-align: left; max-width: 1000px; margin: 0 auto;">
 <br> I build, scale, and modernize data systems.<br>
