@@ -263,21 +263,30 @@ dbt generates a SQL query that checks: does every `customer_id` in `fct_orders` 
 
 ---
 
-## dbt Superpower #5: Auto-Generated Documentation
 ## dbt Superpower #4: Source Freshness (`dbt source freshness`)
 
-We declare all three Bronze tables as dbt **sources** with freshness thresholds:
+Think of this like a freshness sticker on food. You declare a rule: *"This data should be updated at least every 24 hours."* dbt then checks the actual timestamp of your source table and tells you whether it is fresh or stale.
+
+In the project, we declare freshness rules on all three Bronze tables:
 
 ```yaml
 sources:
   - name: ecommerce_bronze
     freshness:
-      warn_after: {count: 24, period: hour}
-      error_after: {count: 48, period: hour}
+      warn_after: {count: 24, period: hour}   # yellow warning after 1 day
+      error_after: {count: 48, period: hour}  # red error after 2 days
     loaded_at_field: "current_timestamp()"
 ```
 
-Running `dbt source freshness` checks whether your source data has been updated within the expected window. In production pipelines, this is how data teams detect when an upstream ETL job silently fails.
+When you run `dbt source freshness`, dbt connects to Databricks and checks the timestamp of each source table. You get a clear pass/warn/error result for every one:
+
+```
+✅ PASS  ecommerce_bronze.raw_orders      (updated 2 hours ago)
+✅ PASS  ecommerce_bronze.raw_customers   (updated 2 hours ago)
+✅ PASS  ecommerce_bronze.raw_products    (updated 2 hours ago)
+```
+
+**Why this matters in production:** Upstream ETL pipelines fail silently all the time. Without source freshness, your dashboards will show yesterday's data and nobody will know. A business executive will make a decision based on stale numbers. With `dbt source freshness` hooked into your monitoring, the data team is alerted before anyone else notices.
 
 ---
 
@@ -285,7 +294,7 @@ Running `dbt source freshness` checks whether your source data has been updated 
 
 After running `dbt docs generate && dbt docs serve`, open `localhost:8080` and click the graph icon in the bottom-right. This is what you see:
 
-![dbt Lineage Graph — Bronze seeds (green) flow through Silver staging into the Gold fct_orders hub (purple), which feeds all three mart tables](/projects-code/dbt-databricks-ecommerce/analytics/screenshots/fct_orders.png)
+![dbt Lineage Graph — Bronze seeds (green) flow through Silver staging into the Gold fct_orders hub (purple), which feeds all three mart tables](/images/dbt/fct_orders.png)
 
 This diagram was **generated automatically** from your `ref()` calls in SQL. dbt reads your code, understands the dependencies, and draws this for free. You never have to maintain a data flow diagram again — it updates every time you run `dbt docs generate`.
 
@@ -328,7 +337,7 @@ GROUP BY payment_method
 ORDER BY total_revenue DESC;
 ```
 
-![Revenue by Payment Method — Credit card dominates at ~$730, followed by debit card ($325) and PayPal ($245)](/projects-code/dbt-databricks-ecommerce/analytics/screenshots/payment_method.png)
+![Revenue by Payment Method — Credit card dominates at ~$730, followed by debit card ($325) and PayPal ($245)](/images/dbt/payment_method.png)
 
 **Business insight:** Credit card customers account for over 55% of total revenue. A real business would use this to prioritise their payment gateway partnerships.
 
@@ -342,7 +351,7 @@ FROM dev.ecommerce_gold.dim_products
 ORDER BY total_revenue DESC;
 ```
 
-![Product Revenue — Wireless Headphones leads at ~$650 total revenue, followed by Laptop Pro 15 at ~$360](/projects-code/dbt-databricks-ecommerce/analytics/screenshots/product_revenue.png)
+![Product Revenue — Wireless Headphones leads at ~$650 total revenue, followed by Laptop Pro 15 at ~$360](/images/dbt/product_revenue.png)
 
 **Business insight:** Wireless Headphones generates 2x the revenue of the next best product (Laptop Pro 15), despite both being Electronics. This is the kind of signal a product team would act on immediately — expand the headphones range, investigate the laptop.
 
@@ -357,7 +366,8 @@ WHERE total_orders IS NOT NULL
 ORDER BY lifetime_value DESC;
 ```
 
-![Customer Lifetime Value — Carlos Garcia leads with ~$280 LTV, Aisha Patel close behind at ~$270](/projects-code/dbt-databricks-ecommerce/analytics/screenshots/customer.png)
+![Customer Lifetime Value — Carlos Garcia leads with ~$280 LTV, Aisha Patel close behind at ~$270](/images/dbt/customer.png)
+
 
 **Business insight:** The top 3 customers (Carlos Garcia, Aisha Patel, Arjun Sajeevan) each account for over $150 in lifetime value. A retention campaign targeting this cohort would protect a significant portion of revenue.
 
